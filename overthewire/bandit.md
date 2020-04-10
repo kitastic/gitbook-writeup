@@ -11,18 +11,17 @@
    export WECHALLTOKEN="YOUR-WECHALL-TOKEN-HERE"
    ```
 
-   \*If you are using Windows 10 \(WSL\), you can either use the Ubuntu terminal which automatically loads the bashrc file or the file can be found in C:\Users\USERNAME\AppData\Local\Packages\{LINUX\_DISTRIBUTION}\LocalState\rootfs\home\{LINUXUSER}\
+   \*If you are using Windows 10 \(WSL\), you can either use the Ubuntu terminal which automatically loads the bashrc file or the file can be found in C:\Users\USERNAME\AppData\Local\Packages{LINUX\_DISTRIBUTION}\LocalState\rootfs\home{LINUXUSER}\
 
-  
-   For `fish` users, you may run:
+For `fish` users, you may run:
 
-   ```text
+```text
    set -Ux WECHALLUSER "YourUserName"
-   ```
+```
 
-   You may need to logout and login again for these changes to take effect. To test whether the environment variables are registered, type “echo $WECHALLUSER”, which should show that environment variable.
+You may need to logout and login again for these changes to take effect. To test whether the environment variables are registered, type “echo $WECHALLUSER”, which should show that environment variable.
 
-4. Next, edit ~/.ssh/config \(or create it if it doesn’t exist\) and add:
+1. Next, edit ~/.ssh/config \(or create it if it doesn’t exist\) and add:
 
    ```text
    Host *.labs.overthewire.org
@@ -32,29 +31,23 @@
 
    This configures your SSH client to transmit both username and token to your remote session, so it can be used there.
 
-5. Finally, you are able to easily register which levels you have beaten on OverTheWire by logging in through SSH the normal way, and invoking the “wechall” command. This command will use your WeChall username and WeChall token to register the level you have beaten with WeChall.  `WECHALLUSER="tokumeipoh" WECHALLTOKEN="129CF-40592-FCDCF-67470-6F4EA-D5DB1" wechall`
+2. Finally, you are able to easily register which levels you have beaten on OverTheWire by logging in through SSH the normal way, and invoking the “wechall” command. This command will use your WeChall username and WeChall token to register the level you have beaten with WeChall. `WECHALLUSER="tokumeipoh" WECHALLTOKEN="129CF-40592-FCDCF-67470-6F4EA-D5DB1" wechall`
 
 ### Level 0
 
 > The goal of this level is for you to log into the game using SSH. The host to which you need to connect is **bandit.labs.overthewire.org**, on port 2220. The username is **bandit0** and the password is **bandit0**. Once logged in, go to the [Level 1](https://overthewire.org/wargames/bandit/bandit1.html) page to find out how to beat Level 1.
 
-{%hint style="info"%}
-If you get an ssh error
+If you get an ssh error "Bad owner or permissions on /home/{user}/.ssh/config", you need to set rw permission only for the user
 
-`Bad owner or permissions on /home/{user}/.ssh/config`
-
-You need to set rw permission only for the user
-
-```text
+```bash
 chmod 600 ~/.ssh/config
 // or
 chown $USER ~/.ssh/config
 ```
-{% endhint %}
 
 > The password for the next level is stored in a file called **readme** located in the home directory. Use this password to log into bandit1 using SSH. Whenever you find a password for a level, use SSH \(on port 2220\) to log into that level and continue the game.
 
-Use cat command to read the file and get the password. Then use that password to login to the same server with incrementing bandit number as the username. E.g.   
+Use cat command to read the file and get the password. Then use that password to login to the same server with incrementing bandit number as the username. E.g.  
 _`sudo bandit1@bandit.labs.overthewire.org -p 2220`_
 
 ### _Level 1_
@@ -118,6 +111,4 @@ cat ./.hidden     // file called ".hidden" was found
 > ### Commands you may need to solve this level <a id="commands-you-may-need-to-solve-this-level"></a>
 >
 > ls, cd, cat, file, du, find
-
-
 
