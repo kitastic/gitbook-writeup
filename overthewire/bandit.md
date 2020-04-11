@@ -289,3 +289,129 @@ echo "4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e" | nc localhost 30000
 
 bandit15 / BfMYroe26WYalil77FoDi9qh59eK5xNr
 
+### Level 15
+
+> The password for the next level can be retrieved by submitting the password of the current level to **port 30001 on localhost** using SSL encryption.
+>
+> **Helpful note: Getting “HEARTBEATING” and “Read R BLOCK”? Use -ign\_eof and read the “CONNECTED COMMANDS” section in the manpage. Next to ‘R’ and ‘Q’, the ‘B’ command also works   
+> in this version of that command…**
+
+```bash
+bandit15@bandit:~$ echo "BfMYroe26WYalil77FoDi9qh59eK5xNr" | openssl s_client -connect localhost:30001 -quiet
+depth=0 CN = localhost
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = localhost
+verify return:1
+Correct!
+[blurred_out_flag] # not actual password
+cluFn7wTiGryunymYOu4RcffSxQluehd
+```
+
+**-s\_client** SSL/TSL client program. \[[man](https://www.openssl.org/docs/man1.0.2/man1/openssl-s_client.html)\]  
+**-quiet** inhibit printing of session and certificate information. This implicitly turns on **-ign\_eof** as well.
+
+### Level 16
+
+> The credentials for the next level can be retrieved by submitting the password of the current level to **a port on localhost in the range 31000 to 32000**. First find out which of these ports have a server listening on them. Then find out which of those speak SSL and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.
+
+nmap : Network exploration tool and security / port scanner  
+  \[options\]   
+    -sV : Probe open ports to determine service/version info  
+    -T&lt;0-5&gt; : Set timing template \(higher is faster\)  
+    -p : specify port number
+
+```bash
+bandit16@bandit:~$ nmap -sV localhost -p31000-32000
+
+Starting Nmap 7.40 ( https://nmap.org ) at 2020-04-11 20:21 CEST
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00025s latency).
+Not shown: 999 closed ports
+PORT      STATE    SERVICE     VERSION
+31518/tcp filtered unknown
+31790/tcp open     ssl/unknown
+.
+.
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 89.37 seconds
+```
+
+Results show that port 31790 is open with ssl service. Now echo current password to retrieve RSA private key.
+
+```bash
+bandit16@bandit:~$ echo "cluFn7wTiGryunymYOu4RcffSxQluehd" | openssl s_client -connect localhost:31790 -quiet
+```
+
+I saved the key in a file called _17loginkey._ In order to use the key successfully, the file permission must be changed to user specific. Then change cwd to where the key is stored and login with optional key.
+
+```bash
+poh@pohSurface:~/ctf/overthewire$ chmod 600 17loginkey
+poh@pohSurface:~/ctf/overthewire$ ll
+total 4
+drwxrwxrwx 1 poh poh 4096 Apr 11 14:09 ./
+drwxrwxrwx 1 poh poh 4096 Apr 11 14:08 ../
+-rw------- 1 poh poh 1700 Apr 11 14:09 17loginkey
+poh@pohSurface:~/ctf/overthewire$ ssh -i 17loginkey bandit17@bandit.labs.overthewire.org -p 2220
+```
+
+### Level 17
+
+> There are 2 files in the homedirectory: **passwords.old and passwords.new**. The password for the next level is in **passwords.new** and is the only line that has been changed between **passwords.old and passwords.new.** Useful cmd: cat, grep, ls, diff
+>
+> **NOTE: if you have solved this level and see ‘Byebye!’ when trying to log into bandit18, this is related to the next level, bandit19**
+
+```bash
+diff passwords.new passwords.old
+# then try both passwords shown, one will work
+```
+
+### Level 18   
+
+> The password for the next level is stored in a file **readme** in the homedirectory. Unfortunately, someone has modified **.bashrc** to log you out when you log in with SSH. Useful cmd: ssh, ls, cat
+
+```bash
+poh@pohSurface:~/ctf/overthewire$ ssh bandit18@bandit.labs.overthewire.org -p 2220 ls -la
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit18@bandit.labs.overthewire.org's password:
+total 24
+drwxr-xr-x  2 root     root     4096 Oct 16  2018 .
+drwxr-xr-x 41 root     root     4096 Oct 16  2018 ..
+-rw-r--r--  1 root     root      220 May 15  2017 .bash_logout
+-rw-r-----  1 bandit19 bandit18 3549 Oct 16  2018 .bashrc
+-rw-r--r--  1 root     root      675 May 15  2017 .profile
+-rw-r-----  1 bandit19 bandit18   33 Oct 16  2018 readme
+poh@pohSurface:~/ctf/overthewire$ ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit18@bandit.labs.overthewire.org's password:
+{password}
+```
+
+{% hint style="success" %}
+I learned that you can pass additional commands in terminal that will be executed once logged in. Terminal will execute that command right before it disconnects you.
+{% endhint %}
+
+### Level 19
+
+> To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place \(/etc/bandit\_pass\), after you have used the setuid binary.
+
+{% hint style="info" %}
+setuid : This bit is present for files which have executable permissions. The `setuid` bit simply indicates that when running the executable, it will set its permissions to that of the user who created it \(owner\), instead of setting it to the user who launched it. Similarly, there is a `setgid` bit which does the same for the `gid`.  To locate the `setuid`, look for an ‘s’ instead of an ‘x’ in the executable bit of the file permissions.
+{% endhint %}
+
+ The owner of the `bandit20-do` is `bandit20`. The red highlight signifies that the file has elevated permissions and any commands executed through the runtime of the file will be run as `bandit20`.
+
+```bash
+bandit19@bandit:~$ ls -al
+total 28
+drwxr-xr-x  2 root     root     4096 Oct 16  2018 .
+drwxr-xr-x 41 root     root     4096 Oct 16  2018 ..
+-rwsr-x---  1 bandit20 bandit19 7296 Oct 16  2018 bandit20-do
+-rw-r--r--  1 root     root      220 May 15  2017 .bash_logout
+-rw-r--r--  1 root     root     3526 May 15  2017 .bashrc
+-rw-r--r--  1 root     root      675 May 15  2017 .profile
+```
+
