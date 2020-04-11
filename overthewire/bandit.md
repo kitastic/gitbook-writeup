@@ -277,8 +277,6 @@ bandit13 / 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
 bandit13@bandit:~$ ssh -i sshkey.private bandit14@localhost
 ```
 
-bandit14 / 4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
-
 ### Level 14
 
 > The password for the next level can be retrieved by submitting the password of the current level to **port 30000 on localhost**.
@@ -288,4 +286,6 @@ You can talk to localhost by using netcat by echoing. \[[linux.die.net](https://
 ```bash
 echo "4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e" | nc localhost 30000
 ```
+
+bandit15 / BfMYroe26WYalil77FoDi9qh59eK5xNr
 
