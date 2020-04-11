@@ -402,8 +402,6 @@ I learned that you can pass additional commands in terminal that will be execute
 setuid : This bit is present for files which have executable permissions. The `setuid` bit simply indicates that when running the executable, it will set its permissions to that of the user who created it \(owner\), instead of setting it to the user who launched it. Similarly, there is a `setgid` bit which does the same for the `gid`.  To locate the `setuid`, look for an ‘s’ instead of an ‘x’ in the executable bit of the file permissions.
 {% endhint %}
 
- The owner of the `bandit20-do` is `bandit20`. The red highlight signifies that the file has elevated permissions and any commands executed through the runtime of the file will be run as `bandit20`.
-
 ```bash
 bandit19@bandit:~$ ls -al
 total 28
@@ -413,5 +411,136 @@ drwxr-xr-x 41 root     root     4096 Oct 16  2018 ..
 -rw-r--r--  1 root     root      220 May 15  2017 .bash_logout
 -rw-r--r--  1 root     root     3526 May 15  2017 .bashrc
 -rw-r--r--  1 root     root      675 May 15  2017 .profile
+# The owner of the bandit20-do is bandit20
+bandit19@bandit:~$ ls -l /etc/bandit_pass/bandit20
+-r-------- 1 bandit20 bandit20 33 Oct 16  2018 /etc/bandit_pass/bandit20
+# only user bandit20 can read bandit20 file
+# executing the file bandit20-do gives you bandit20's permission 
+# level and therefore are able to cat bandit20's password file.
+bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
+```
+
+### Level 20
+
+> There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level \(bandit20\). If the password is correct, it will transmit the password for the next level \(bandit21\).  
+> Useful cmd: ssh, nc, cat, bash, screen, tmux, Unix ‘job control’ \(bg, fg, jobs, &, CTRL-Z, …\)
+>
+> **NOTE:** Try connecting to your own network daemon to see if it works as you think
+
+{% hint style="success" %}
+tmux is a terminal multiplexer. [\[info\]](https://www.poftut.com/linux-tmux-tutorial-command-examples/)   
+To start, type 'tmux" in terminal.  
+_Now once inside tmux, all commands are prefixed with ctrl+b  
+- new horizontal pane \[ctrl+b "\]   
+- pane navigation \[ctrl+b arrow\]  
+- detach from tmux \[ctrl+b d\]_
+{% endhint %}
+
+![tmux implementation](../.gitbook/assets/20result.png)
+
+1. In the bottom pane, set netcat to listen on 1234 \(arbitrarily chosen\) and send it bandit20's password file.
+2. Move to top pane and execute suconnect with 1234 as parameter. suconnect will read the text from netcat and compare passwords. Once verified, suconnect will send to netcat password for next level
+
+### Level 21
+
+> A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+
+```bash
+bandit21@bandit:~$ cd /etc/cron.d
+bandit21@bandit:/etc/cron.d$ ls
+atop  cronjob_bandit22  cronjob_bandit23  cronjob_bandit24
+bandit21@bandit:/etc/cron.d$ ls -al
+total 28
+drwxr-xr-x  2 root root 4096 Dec  4 01:58 .
+drwxr-xr-x 88 root root 4096 Aug  3  2019 ..
+-rw-r--r--  1 root root  189 Jan 25  2017 atop
+-rw-r--r--  1 root root  120 Oct 16  2018 cronjob_bandit22
+-rw-r--r--  1 root root  122 Oct 16  2018 cronjob_bandit23
+-rw-r--r--  1 root root  120 Oct 16  2018 cronjob_bandit24
+-rw-r--r--  1 root root  102 Oct  7  2017 .placeholder
+
+# We are only interested in cronjob_bandit22
+bandit21@bandit:/etc/cron.d$ cat cronjob_bandit22
+@reboot bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+# the script is set to run every minute, see whats in script
+
+bandit21@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit22.sh
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+# the script writes bandit22 file into a file in /tmp/t706..
+
+bandit21@bandit:/etc/cron.d$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+```
+
+### Level 22
+
+> A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed. Usefull cmd: cron, crontab, crontab\(5\) \(use “man 5 crontab” to access this\)
+>
+> **NOTE:** Looking at shell scripts written by other people is a very useful skill. The script for this level is intentionally made easy to read. If you are having problems understanding what it does, try executing it to see the debug information it prints.
+
+```bash
+# move to cron folder
+bandit22@bandit:~$ cd /etc/cron.d
+bandit22@bandit:/etc/cron.d$ ls
+atop  cronjob_bandit22  cronjob_bandit23  cronjob_bandit24
+# see what script is set to run
+bandit22@bandit:/etc/cron.d$ cat cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+
+# view script file
+bandit22@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit23.sh
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+
+That first part `myname=$(whoami)` sets myname to our name. Go ahead and do a `whoami`. It returns who we are logged in as bandit22.
+
+The second part `mytarget=$(echo I am user $myname | md5sum | cut -d ‘ ‘ -f 1)` looks like the command that is run during this script where `$myname` is set to bandit22 and we know we want bandit23 password. Let’s take that part of the script and replace the `$myname` part with bandit23 instead of letting the script set it to our current uid. 
+
+```bash
+bandit22@bandit:~$ echo I am user bandit23 | md5sum | cut -d ' ' -f 1
+8ca319486bfbbc3663ea0fbe81326349
+bandit22@bandit:~$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+```
+
+### Level 23
+
+> A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.  
+> Useful cmd: cron, crontab, crontab\(5\) \(use “man 5 crontab” to access this\)
+>
+> **NOTE:** This level requires you to create your own first shell-script. This is a very big step and you should be proud of yourself when you beat this level!
+>
+> **NOTE 2:** Keep in mind that your shell script is removed once executed, so you may want to keep a copy around…
+
+```bash
+bandit23@bandit:~$ cd /etc/cron.d
+bandit23@bandit:/etc/cron.d$ ls
+atop  cronjob_bandit22  cronjob_bandit23  cronjob_bandit24
+# i remembered where the script was
+bandit23@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit24.sh
+#!/bin/bash
+
+myname=$(whoami)
+
+cd /var/spool/$myname
+echo "Executing and deleting all scripts in /var/spool/$myname:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        timeout -s 9 60 ./$i
+        rm -f ./$i
+    fi
+done
 ```
 
