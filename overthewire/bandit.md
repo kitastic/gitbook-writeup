@@ -263,3 +263,19 @@ bandit12@bandit:/tmp/poh$ cat data8
 
 bandit13 / 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
 
+### Level 13
+
+> The password for the next level is stored in **/etc/bandit\_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. **Note:** **localhost** is a hostname that refers to the machine you are working on
+
+ cat the password from specified file. 
+
+1. While still logged in as bandit13, ssh using the private key to localhost as server.
+2. cat the password from specified file as bandit14
+3. logout from localhost as bandit14, then logout as bandit13
+
+```bash
+bandit13@bandit:~$ ssh -i sshkey.private bandit14@localhost
+```
+
+bandit14 / 4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+
