@@ -11,12 +11,12 @@
    export WECHALLTOKEN="YOUR-WECHALL-TOKEN-HERE"
    ```
 
-   \*If you are using Windows 10 \(WSL\), you can either use the Ubuntu terminal which automatically loads the bashrc file or the file can be found in C:\Users\USERNAME\AppData\Local\Packages{LINUX\_DISTRIBUTION}\LocalState\rootfs\home{LINUXUSER}\
+   \*If you are using Windows 10 \(WSL\), you can either use the Ubuntu terminal which automatically loads the bashrc file or the file can be found in _C:\Users\USERNAME\AppData\Local\Packages{LINUX\_DISTRIBUTION}\LocalState\rootfs\home{LINUXUSER}\_
 
 For `fish` users, you may run:
 
 ```text
-   set -Ux WECHALLUSER "YourUserName"
+set -Ux WECHALLUSER "YourUserName"
 ```
 
 You may need to logout and login again for these changes to take effect. To test whether the environment variables are registered, type “echo $WECHALLUSER”, which should show that environment variable.
@@ -54,10 +54,9 @@ _`sudo bandit1@bandit.labs.overthewire.org -p 2220`_
 
 > The password for the next level is stored in a file called **-** located in the home directory
 >
-> Helpful Reading Material
-
-> * [Google Search for “dashed filename”](https://www.google.com/search?q=dashed+filename)
-> * [Advanced Bash-scripting Guide - Chapter 3 - Special Characters](http://tldp.org/LDP/abs/html/special-chars.html)
+> Helpful Reading Material  
+> [Google Search for “dashed filename”](https://www.google.com/search?q=dashed+filename)  
+> [Advanced Bash-scripting Guide - Chapter 3 - Special Characters](http://tldp.org/LDP/abs/html/special-chars.html)
 
 In order for cat to consider the dash a filename instead of STDIN/STDOUT, you have to specify path such as \(if in same directory\)
 
@@ -151,5 +150,119 @@ grep "millionth" data.txt
 
 > The password for the next level is stored in the file **data.txt** and is the only line of text that occurs only once
 
+```bash
+bandit8@bandit:~$ sort data.txt | uniq -u
+# uniq -u prints out only unique lines
+```
 
+### Level 9
+
+> The password for the next level is stored in the file **data.txt** in one of the few human-readable strings, beginning with several ‘=’ characters.
+
+```bash
+bandit9@bandit:~$ strings data.txt | grep "=="
+# strings - print the sequences of printable characters in files
+```
+
+### Level 10
+
+> The password for the next level is stored in the file **data.txt**, which contains base64 encoded data
+
+```bash
+bandit10@bandit:~$ base64 -d data.txt
+# base64 encode/decode data and print to standard output
+```
+
+### Level 11
+
+> The password for the next level is stored in the file **data.txt**, where all lowercase \(a-z\) and uppercase \(A-Z\) letters have been rotated by 13 positions
+
+```bash
+bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' "N-ZA-Mn-za-m"
+```
+
+tr - translate or delete characters 
+
+### Level 12
+
+> The password for the next level is stored in the file **data.txt**, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work using mkdir. For example: mkdir /tmp/myname123. Then copy the datafile using cp, and rename it using mv \(read the manpages!\)
+
+xxd - make a hexdump or do the reverse.  
+xxd -r\[evert\] \[options\] \[infile \[outfile\]\]  
+  
+ So the given file was a hexdump. I used `xxd -r <filename>` to reverse it and sent the output to a file. I kept using `file` command at each step to know what I’m tackling.  
+`gzip` compressed files are extracted using `gunzip`. But `gunzip` extracts files only with certain extension, `.gz` being one of them. So extension was renamed.  
+`bzip2` compressed files are extracted using `bzip2 -d <filename>` where `-d` flag stands for “decompress”.  
+For `tar` archives I used `tar xvf <filename>`. 
+
+{% hint style="info" %}
+tar options
+
+ **-c :** Creates Archive  
+**-x :** Extract the archive  
+**-f :** creates archive with given filename  
+**-t :** displays or lists files in archived file  
+**-u :** archives and adds to an existing archive file  
+**-v :** Displays Verbose Information  
+**-A :** Concatenates the archive files  
+**-z :** zip, tells tar command that create tar file using gzip  
+**-j :** filter archive tar file using tbzip  
+**-W :** Verify a archive file  
+**-r :** update or add file or directory in already existed .tar file
+{% endhint %}
+
+Repeatedly decompressing files will result in an ASCII text file in the end
+
+```bash
+bandit12@bandit:~$ ls
+data.txt
+bandit12@bandit:~$ mkdir /tmp/poh && cp data.txt /tmp/poh/a.txt
+bandit12@bandit:~$ cd /tmp/poh
+bandit12@bandit:/tmp/poh$ ls
+a.txt
+bandit12@bandit:/tmp/poh$ file a.txt
+a.txt: ASCII text
+bandit12@bandit:/tmp/poh$ xxd -r a.txt b
+bandit12@bandit:/tmp/poh$ file b
+b: gzip compressed data, was "data2.bin", last modified: Tue Oct 16 12:00:23 2018, max compression, from Unix
+bandit12@bandit:/tmp/poh$ mv b b.gz
+bandit12@bandit:/tmp/poh$ gunzip b.gz
+bandit12@bandit:/tmp/poh$ ls
+a.txt  b
+bandit12@bandit:/tmp/poh$ file b
+b: bzip2 compressed data, block size = 900k
+bandit12@bandit:/tmp/poh$ bzip2 -d b
+bzip2: Cant guess original name for b -- using b.out
+bandit12@bandit:/tmp/poh$ file b.out
+b.out: gzip compressed data, was "data4.bin", last modified: Tue Oct 16 12:00:23 2018, max compression, from Unix
+bandit12@bandit:/tmp/poh$ mv b.out b.gz
+bandit12@bandit:/tmp/poh$ gunzip b.gz
+bandit12@bandit:/tmp/poh$ ls
+a.txt  b
+bandit12@bandit:/tmp/poh$ file b
+b: POSIX tar archive (GNU)
+bandit12@bandit:/tmp/poh$ tar xvf b
+data5.bin
+bandit12@bandit:/tmp/poh$ file data5.bin
+data5.bin: POSIX tar archive (GNU)
+bandit12@bandit:/tmp/poh$ tar xvf data5.bin
+data6.bin
+bandit12@bandit:/tmp/poh$ file data6.bin
+data6.bin: bzip2 compressed data, block size = 900k
+bandit12@bandit:/tmp/poh$ bzip2 -dv data6.bin 
+bzip2: Can't guess original name for data6.bin -- using data6.bin.out
+bandit12@bandit:/tmp/poh$ ls
+a.txt  b  data5.bin  data6.bin.out
+bandit12@bandit:/tmp/poh$ file data6.bin.out
+data6.bin.out: POSIX tar archive (GNU)
+bandit12@bandit:/tmp/poh$ tar xvf data6.bin.out | xargs file
+data8.bin: gzip compressed data, was "data9.bin", last modified: Tue Oct 16 12:00:23 2018, max compression, from Unix
+bandit12@bandit:/tmp/poh$ mv data8.bin data8.gz && gunzip -v data8.gz
+data8.gz:        -4.1% -- replaced with data8
+bandit12@bandit:/tmp/poh$ file data8
+data8: ASCII text
+bandit12@bandit:/tmp/poh$ cat data8
+```
+
+bandit13 / 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
 
