@@ -54,12 +54,8 @@ _`sudo bandit1@bandit.labs.overthewire.org -p 2220`_
 
 > The password for the next level is stored in a file called **-** located in the home directory
 >
-> ### Commands you may need to solve this level <a id="commands-you-may-need-to-solve-this-level"></a>
->
-> ls, cd, cat, file, du, find
->
-> ### Helpful Reading Material <a id="helpful-reading-material"></a>
->
+> Helpful Reading Material
+
 > * [Google Search for “dashed filename”](https://www.google.com/search?q=dashed+filename)
 > * [Advanced Bash-scripting Guide - Chapter 3 - Special Characters](http://tldp.org/LDP/abs/html/special-chars.html)
 
@@ -73,11 +69,7 @@ cat ./-
 
 > The password for the next level is stored in a file called **spaces in this filename** located in the home directory
 >
-> ### Commands you may need to solve this level <a id="commands-you-may-need-to-solve-this-level"></a>
->
-> ls, cd, cat, file, du, find
->
-> ### Helpful Reading Material <a id="helpful-reading-material"></a>
+> Helpful Reading Material
 >
 > * [Google Search for “spaces in filename”](https://www.google.com/search?q=spaces+in+filename)
 
@@ -85,30 +77,79 @@ Either access the whole filename inside double quotes or escape each space with 
 
 ```bash
 cat "spaces in this filename"
-// or
+# or
 cat spaces\ in\ this\ filename
 ```
 
 ### Level 3
 
 > The password for the next level is stored in a hidden file in the **inhere** directory.
->
-> ### Commands you may need to solve this level <a id="commands-you-may-need-to-solve-this-level"></a>
->
-> ls, cd, cat, file, du, find
 
 Hidden files usually has a period in front of their names. To list hidden files, pass the option -al. Once you know the name of the hidden file, you can cat the filename.
 
 ```bash
-ls -al            //to list all files including hidden ones
-cat ./.hidden     // file called ".hidden" was found
+ls -al            #to list all files including hidden ones
+cat ./.hidden     # file called ".hidden" was found
 ```
 
 ### Level 4
 
 > The password for the next level is stored in the only human-readable file in the **inhere** directory. Tip: if your terminal is messed up, try the “reset” command.
+
+cd into the inhere directory and cat all files, one at a time, until you see the password. Or cat all files with the name starting with "-file\*". Or **in main directory** type
+
+```bash
+# find in current directory type=file, 
+# | print file types | look for text type
+
+bandit4@bandit:~/inhere$ find -type f | xargs file | grep text
+./-file07: ASCII text
+bandit4@bandit:~/inhere$ cat ./-file07
+```
+
+
+
+### Level 5
+
+> The password for the next level is stored in a file somewhere under the **inhere** directory and has all of the following properties:
 >
-> ### Commands you may need to solve this level <a id="commands-you-may-need-to-solve-this-level"></a>
+> * human-readable
+> * 1033 bytes in size
+> * not executable
+
+```bash
+find . -type f -size 1033c ! -executable | xargs cat
+```
+
+find in current directory type=file size=1033 bytes executable=not \| print arguments
+
+### Level 6
+
+> The password for the next level is stored **somewhere on the server** and has all of the following properties:
 >
-> ls, cd, cat, file, du, find
+> * owned by user bandit7
+> * owned by group bandit6
+> * 33 bytes in size
+
+```bash
+cat `find / -size 33c -group bandit6 -user bandit7 2>/dev/null`
+```
+
+`find /` means find in root directory 
+
+What `2>/dev/null` does is, it redirects all standard errors like `No such file or directory` and `Permission denied` to `/dev/null` where `null` acts as a special device which discards all information written to it. Thus we only get the one required file as output which I sent as input to `cat` to see its contents.
+
+### Level 7
+
+> The password for the next level is stored in the file **data.txt** next to the word **millionth**
+
+```bash
+grep "millionth" data.txt
+```
+
+### Level 8
+
+> The password for the next level is stored in the file **data.txt** and is the only line of text that occurs only once
+
+
 
