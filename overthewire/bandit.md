@@ -106,8 +106,6 @@ bandit4@bandit:~/inhere$ find -type f | xargs file | grep text
 bandit4@bandit:~/inhere$ cat ./-file07
 ```
 
-
-
 ### Level 5
 
 > The password for the next level is stored in a file somewhere under the **inhere** directory and has all of the following properties:
@@ -189,7 +187,6 @@ tr - translate or delete characters
 
 xxd - make a hexdump or do the reverse.  
 xxd -r\[evert\] \[options\] \[infile \[outfile\]\]  
-  
  So the given file was a hexdump. I used `xxd -r <filename>` to reverse it and sent the output to a file. I kept using `file` command at each step to know what I’m tackling.  
 `gzip` compressed files are extracted using `gunzip`. But `gunzip` extracts files only with certain extension, `.gz` being one of them. So extension was renamed.  
 `bzip2` compressed files are extracted using `bzip2 -d <filename>` where `-d` flag stands for “decompress”.  
