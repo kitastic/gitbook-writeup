@@ -502,9 +502,9 @@ echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
 cat /etc/bandit_pass/$myname > /tmp/$mytarget
 ```
 
-That first part `myname=$(whoami)` sets myname to our name. Go ahead and do a `whoami`. It returns who we are logged in as bandit22.
+line 14: `myname=$(whoami)` sets myname to our name. Go ahead and do a `whoami`. It returns who we are logged in as bandit22.
 
-The second part `mytarget=$(echo I am user $myname | md5sum | cut -d ‘ ‘ -f 1)` looks like the command that is run during this script where `$myname` is set to bandit22 and we know we want bandit23 password. Let’s take that part of the script and replace the `$myname` part with bandit23 instead of letting the script set it to our current uid. 
+line 15:`mytarget=$(echo I am user $myname | md5sum | cut -d ‘ ‘ -f 1)` looks like the command that is run during this script where `$myname` is set to bandit22 and we know we want bandit23 password. Let’s take that part of the script and replace the `$myname` part with bandit23 instead of letting the script set it to our current uid. 
 
 ```bash
 bandit22@bandit:~$ echo I am user bandit23 | md5sum | cut -d ' ' -f 1
@@ -533,11 +533,14 @@ myname=$(whoami)
 
 cd /var/spool/$myname
 echo "Executing and deleting all scripts in /var/spool/$myname:"
+# for all files in directory
 for i in * .*;
 do
+    # if file is not "." and file is not ".."
     if [ "$i" != "." -a "$i" != ".." ];
     then
         echo "Handling $i"
+        # execute script for 60 seconds then kill it
         timeout -s 9 60 ./$i
         rm -f ./$i
     fi
