@@ -7,6 +7,6 @@
 
 * [Bandit](overthewire/bandit/README.md)
   * [Bandit Flags](overthewire/bandit/bandit-flags.md)
-* [Natas](natas/README.md)
-  * [Natas Flags](natas/natas-flags.md)
+* [Natas](overthewire/natas/README.md)
+  * [Natas Flags](overthewire/natas/natas-flags.md)
 
