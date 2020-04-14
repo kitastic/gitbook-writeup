@@ -178,7 +178,7 @@ xxd -r\[evert\] \[options\] \[infile \[outfile\]\]
 `bzip2` compressed files are extracted using `bzip2 -d <filename>` where `-d` flag stands for “decompress”.  
 For `tar` archives I used `tar xvf <filename>`. 
 
-{% hint style="info" %}
+
 tar options
 
  **-c :** Creates Archive  
@@ -192,7 +192,7 @@ tar options
 **-j :** filter archive tar file using tbzip  
 **-W :** Verify a archive file  
 **-r :** update or add file or directory in already existed .tar file
-{% endhint %}
+
 
 Repeatedly decompressing files will result in an ASCII text file in the end
 
@@ -372,17 +372,17 @@ bandit18@bandit.labs.overthewire.org's password:
 {password}
 ```
 
-{% hint style="success" %}
+
 I learned that you can pass additional commands in terminal that will be executed once logged in. Terminal will execute that command right before it disconnects you.
-{% endhint %}
+
 
 ### Level 19
 
 > To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place \(/etc/bandit\_pass\), after you have used the setuid binary.
 
-{% hint style="info" %}
+
 setuid : This bit is present for files which have executable permissions. The `setuid` bit simply indicates that when running the executable, it will set its permissions to that of the user who created it \(owner\), instead of setting it to the user who launched it. Similarly, there is a `setgid` bit which does the same for the `gid`.  To locate the `setuid`, look for an ‘s’ instead of an ‘x’ in the executable bit of the file permissions.
-{% endhint %}
+
 
 ```bash
 bandit19@bandit:~$ ls -al
@@ -409,14 +409,14 @@ bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
 >
 > **NOTE:** Try connecting to your own network daemon to see if it works as you think
 
-{% hint style="success" %}
+
 tmux is a terminal multiplexer. [\[info\]](https://www.poftut.com/linux-tmux-tutorial-command-examples/)   
 To start, type 'tmux" in terminal.  
 _Now once inside tmux, all commands are prefixed with ctrl+b  
 - new horizontal pane \[ctrl+b "\]   
 - pane navigation \[ctrl+b arrow\]  
 - detach from tmux \[ctrl+b d\]_
-{% endhint %}
+
 
 ![tmux implementation](../../.gitbook/assets/20result.png)
 
@@ -633,9 +633,9 @@ bandit25@bandit:~$ ssh -i bandit26.sshkey bandit26@localhost
 
 Login is successful but you get disconnected immediately. Because of the clue "not /bin/bash", look at /etc/passwd.  
 
-{% hint style="info" %}
+
  /etc/passwd is a text [file](http://www.linfo.org/filedef.html) that contains the attributes of \(i.e., basic information about\) each user or account on a [computer](http://www.linfo.org/computer.html) running [Linux](http://www.linfo.org/linuxdef.html) or another [Unix-like](http://www.linfo.org/unix-like.html) [operating system](http://www.linfo.org/operating_system.html).
-{% endhint %}
+
 
 one of the lines read out will be  
 `bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext`
