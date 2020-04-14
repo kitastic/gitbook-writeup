@@ -1,7 +1,6 @@
 # Table of contents
 
 * [Capture The Flag](./)
-* [WeChall](wechall.md)
 
 ## OverTheWire
 
