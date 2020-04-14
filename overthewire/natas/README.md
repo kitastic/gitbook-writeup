@@ -10,3 +10,4 @@ Each level has access to the password of the next level. Your job is to somehow 
 
 ### Level 0 
 
+![](https://kitpham.i234.me:5001/d/f/548406917540656599 "level 0")
