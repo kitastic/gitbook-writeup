@@ -2,7 +2,7 @@
 
 The Bandit wargame is aimed at absolute beginners. It will teach the basics needed to be able to play other wargames. **If you notice something essential is missing or have ideas for new levels, please let us know!**
 
-### Note for beginners <a id="note-for-beginners"></a>
+## Note for beginners <a id="note-for-beginners"></a>
 
 This game, like most other games, is organised in levels. You start at Level 0 and try to “beat” or “finish” it. Finishing a level results in information on how to start the next level. The pages on this website for “Level &lt;X&gt;” contain information on how to start level X from the previous level. E.g. The page for [Level 1](https://overthewire.org/wargames/bandit/bandit1.html) has information on how to gain access from [Level 0](https://overthewire.org/wargames/bandit/bandit0.html) to [Level 1](https://overthewire.org/wargames/bandit/bandit1.html). All levels in this game have a page on this website, and they are all linked to from the sidemenu on the left of this page.
 
@@ -19,7 +19,7 @@ You’re ready to start! Begin with [Level 0](https://overthewire.org/wargames/b
 
 **Note for VMs:** You may fail to connect to overthewire.org via SSH with a “_broken pipe error_” when the network adapter for the VM is configured to use NAT mode. Adding the setting **`IPQoS throughput`** to `/etc/ssh/ssh_config` should resolve the issue. If this does not solve your issue, the only option then is to change the adapter to Bridged mode.
 
-### Level 0
+## Level 0
 
 > The goal of this level is for you to log into the game using SSH. The host to which you need to connect is **bandit.labs.overthewire.org**, on port 2220. The username is **bandit0** and the password is **bandit0**. Once logged in, go to the [Level 1](https://overthewire.org/wargames/bandit/bandit1.html) page to find out how to beat Level 1.
 
@@ -36,7 +36,7 @@ chown $USER ~/.ssh/config
 Use cat command to read the file and get the password. Then use that password to login to the same server with incrementing bandit number as the username. E.g.  
 _`sudo bandit1@bandit.labs.overthewire.org -p 2220`_
 
-### _Level 1_
+## _Level 1_
 
 > The password for the next level is stored in a file called **-** located in the home directory
 >
@@ -50,7 +50,7 @@ In order for cat to consider the dash a filename instead of STDIN/STDOUT, you ha
 cat ./-
 ```
 
-### Level 2
+## Level 2
 
 > The password for the next level is stored in a file called **spaces in this filename** located in the home directory
 >
@@ -66,7 +66,7 @@ cat "spaces in this filename"
 cat spaces\ in\ this\ filename
 ```
 
-### Level 3
+## Level 3
 
 > The password for the next level is stored in a hidden file in the **inhere** directory.
 
@@ -77,7 +77,7 @@ ls -al            #to list all files including hidden ones
 cat ./.hidden     # file called ".hidden" was found
 ```
 
-### Level 4
+## Level 4
 
 > The password for the next level is stored in the only human-readable file in the **inhere** directory. Tip: if your terminal is messed up, try the “reset” command.
 
@@ -92,7 +92,7 @@ bandit4@bandit:~/inhere$ find -type f | xargs file | grep text
 bandit4@bandit:~/inhere$ cat ./-file07
 ```
 
-### Level 5
+## Level 5
 
 > The password for the next level is stored in a file somewhere under the **inhere** directory and has all of the following properties:
 >
@@ -106,7 +106,7 @@ find . -type f -size 1033c ! -executable | xargs cat
 
 find in current directory type=file size=1033 bytes executable=not \| print arguments
 
-### Level 6
+## Level 6
 
 > The password for the next level is stored **somewhere on the server** and has all of the following properties:
 >
@@ -118,11 +118,11 @@ find in current directory type=file size=1033 bytes executable=not \| print argu
 cat `find / -size 33c -group bandit6 -user bandit7 2>/dev/null`
 ```
 
-`find /` means find in root directory 
+`find /` means find in root directory
 
 What `2>/dev/null` does is, it redirects all standard errors like `No such file or directory` and `Permission denied` to `/dev/null` where `null` acts as a special device which discards all information written to it. Thus we only get the one required file as output which I sent as input to `cat` to see its contents.
 
-### Level 7
+## Level 7
 
 > The password for the next level is stored in the file **data.txt** next to the word **millionth**
 
@@ -130,7 +130,7 @@ What `2>/dev/null` does is, it redirects all standard errors like `No such file 
 grep "millionth" data.txt
 ```
 
-### Level 8
+## Level 8
 
 > The password for the next level is stored in the file **data.txt** and is the only line of text that occurs only once
 
@@ -139,7 +139,7 @@ bandit8@bandit:~$ sort data.txt | uniq -u
 # uniq -u prints out only unique lines
 ```
 
-### Level 9
+## Level 9
 
 > The password for the next level is stored in the file **data.txt** in one of the few human-readable strings, beginning with several ‘=’ characters.
 
@@ -148,7 +148,7 @@ bandit9@bandit:~$ strings data.txt | grep "=="
 # strings - print the sequences of printable characters in files
 ```
 
-### Level 10
+## Level 10
 
 > The password for the next level is stored in the file **data.txt**, which contains base64 encoded data
 
@@ -157,7 +157,7 @@ bandit10@bandit:~$ base64 -d data.txt
 # base64 encode/decode data and print to standard output
 ```
 
-### Level 11
+## Level 11
 
 > The password for the next level is stored in the file **data.txt**, where all lowercase \(a-z\) and uppercase \(A-Z\) letters have been rotated by 13 positions
 
@@ -165,23 +165,22 @@ bandit10@bandit:~$ base64 -d data.txt
 bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' "N-ZA-Mn-za-m"
 ```
 
-tr - translate or delete characters 
+tr - translate or delete characters
 
-### Level 12
+## Level 12
 
 > The password for the next level is stored in the file **data.txt**, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work using mkdir. For example: mkdir /tmp/myname123. Then copy the datafile using cp, and rename it using mv \(read the manpages!\)
 
 xxd - make a hexdump or do the reverse.  
 xxd -r\[evert\] \[options\] \[infile \[outfile\]\]  
- So the given file was a hexdump. I used `xxd -r <filename>` to reverse it and sent the output to a file. I kept using `file` command at each step to know what I’m tackling.  
+So the given file was a hexdump. I used `xxd -r <filename>` to reverse it and sent the output to a file. I kept using `file` command at each step to know what I’m tackling.  
 `gzip` compressed files are extracted using `gunzip`. But `gunzip` extracts files only with certain extension, `.gz` being one of them. So extension was renamed.  
 `bzip2` compressed files are extracted using `bzip2 -d <filename>` where `-d` flag stands for “decompress”.  
-For `tar` archives I used `tar xvf <filename>`. 
-
+For `tar` archives I used `tar xvf <filename>`.
 
 tar options
 
- **-c :** Creates Archive  
+**-c :** Creates Archive  
 **-x :** Extract the archive  
 **-f :** creates archive with given filename  
 **-t :** displays or lists files in archived file  
@@ -192,7 +191,6 @@ tar options
 **-j :** filter archive tar file using tbzip  
 **-W :** Verify a archive file  
 **-r :** update or add file or directory in already existed .tar file
-
 
 Repeatedly decompressing files will result in an ASCII text file in the end
 
@@ -247,11 +245,11 @@ data8: ASCII text
 bandit12@bandit:/tmp/poh$ cat data8
 ```
 
-### Level 13
+## Level 13
 
 > The password for the next level is stored in **/etc/bandit\_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. **Note:** **localhost** is a hostname that refers to the machine you are working on
 
- cat the password from specified file. 
+cat the password from specified file.
 
 1. While still logged in as bandit13, ssh using the private key to localhost as server.
 2. cat the password from specified file as bandit14
@@ -261,7 +259,7 @@ bandit12@bandit:/tmp/poh$ cat data8
 bandit13@bandit:~$ ssh -i sshkey.private bandit14@localhost
 ```
 
-### Level 14
+## Level 14
 
 > The password for the next level can be retrieved by submitting the password of the current level to **port 30000 on localhost**.
 
@@ -271,11 +269,11 @@ You can talk to localhost by using netcat by echoing. \[[linux.die.net](https://
 echo "{password}" | nc localhost 30000
 ```
 
-### Level 15
+## Level 15
 
 > The password for the next level can be retrieved by submitting the password of the current level to **port 30001 on localhost** using SSL encryption.
 >
-> **Helpful note: Getting “HEARTBEATING” and “Read R BLOCK”? Use -ign\_eof and read the “CONNECTED COMMANDS” section in the manpage. Next to ‘R’ and ‘Q’, the ‘B’ command also works   
+> **Helpful note: Getting “HEARTBEATING” and “Read R BLOCK”? Use -ign\_eof and read the “CONNECTED COMMANDS” section in the manpage. Next to ‘R’ and ‘Q’, the ‘B’ command also works  
 > in this version of that command…**
 
 ```bash
@@ -293,15 +291,15 @@ cluFn7wTiGryunymYOu4RcffSxQluehd
 **-s\_client** SSL/TSL client program. \[[man](https://www.openssl.org/docs/man1.0.2/man1/openssl-s_client.html)\]  
 **-quiet** inhibit printing of session and certificate information. This implicitly turns on **-ign\_eof** as well.
 
-### Level 16
+## Level 16
 
 > The credentials for the next level can be retrieved by submitting the password of the current level to **a port on localhost in the range 31000 to 32000**. First find out which of these ports have a server listening on them. Then find out which of those speak SSL and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.
 
 nmap : Network exploration tool and security / port scanner  
-  \[options\]   
-    -sV : Probe open ports to determine service/version info  
-    -T&lt;0-5&gt; : Set timing template \(higher is faster\)  
-    -p : specify port number
+\[options\]  
+-sV : Probe open ports to determine service/version info  
+-T&lt;0-5&gt; : Set timing template \(higher is faster\)  
+-p : specify port number
 
 ```bash
 bandit16@bandit:~$ nmap -sV localhost -p31000-32000
@@ -338,7 +336,7 @@ drwxrwxrwx 1 poh poh 4096 Apr 11 14:08 ../
 poh@pohSurface:~/ctf/overthewire$ ssh -i 17loginkey bandit17@bandit.labs.overthewire.org -p 2220
 ```
 
-### Level 17
+## Level 17
 
 > There are 2 files in the homedirectory: **passwords.old and passwords.new**. The password for the next level is in **passwords.new** and is the only line that has been changed between **passwords.old and passwords.new.** Useful cmd: cat, grep, ls, diff
 >
@@ -349,7 +347,7 @@ diff passwords.new passwords.old
 # then try both passwords shown, one will work
 ```
 
-### Level 18   
+## Level 18
 
 > The password for the next level is stored in a file **readme** in the homedirectory. Unfortunately, someone has modified **.bashrc** to log you out when you log in with SSH. Useful cmd: ssh, ls, cat
 
@@ -372,17 +370,13 @@ bandit18@bandit.labs.overthewire.org's password:
 {password}
 ```
 
-
 I learned that you can pass additional commands in terminal that will be executed once logged in. Terminal will execute that command right before it disconnects you.
 
-
-### Level 19
+## Level 19
 
 > To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place \(/etc/bandit\_pass\), after you have used the setuid binary.
 
-
-setuid : This bit is present for files which have executable permissions. The `setuid` bit simply indicates that when running the executable, it will set its permissions to that of the user who created it \(owner\), instead of setting it to the user who launched it. Similarly, there is a `setgid` bit which does the same for the `gid`.  To locate the `setuid`, look for an ‘s’ instead of an ‘x’ in the executable bit of the file permissions.
-
+setuid : This bit is present for files which have executable permissions. The `setuid` bit simply indicates that when running the executable, it will set its permissions to that of the user who created it \(owner\), instead of setting it to the user who launched it. Similarly, there is a `setgid` bit which does the same for the `gid`. To locate the `setuid`, look for an ‘s’ instead of an ‘x’ in the executable bit of the file permissions.
 
 ```bash
 bandit19@bandit:~$ ls -al
@@ -402,28 +396,27 @@ bandit19@bandit:~$ ls -l /etc/bandit_pass/bandit20
 bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
 ```
 
-### Level 20
+## Level 20
 
 > There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level \(bandit20\). If the password is correct, it will transmit the password for the next level \(bandit21\).  
 > Useful cmd: ssh, nc, cat, bash, screen, tmux, Unix ‘job control’ \(bg, fg, jobs, &, CTRL-Z, …\)
 >
 > **NOTE:** Try connecting to your own network daemon to see if it works as you think
 
-
-tmux is a terminal multiplexer. [\[info\]](https://www.poftut.com/linux-tmux-tutorial-command-examples/)   
+tmux is a terminal multiplexer. [\[info\]](https://www.poftut.com/linux-tmux-tutorial-command-examples/)  
 To start, type 'tmux" in terminal.  
-_Now once inside tmux, all commands are prefixed with ctrl+b  
-- new horizontal pane \[ctrl+b "\]   
-- pane navigation \[ctrl+b arrow\]  
-- detach from tmux \[ctrl+b d\]_
+\_Now once inside tmux, all commands are prefixed with ctrl+b
 
+* new horizontal pane \[ctrl+b "\]   
+* pane navigation \[ctrl+b arrow\]  
+* detach from tmux \[ctrl+b d\]\_
 
 ![tmux implementation](../../.gitbook/assets/20result.png)
 
 1. In the bottom pane, set netcat to listen on 1234 \(arbitrarily chosen\) and send it bandit20's password file.
 2. Move to top pane and execute suconnect with 1234 as parameter. suconnect will read the text from netcat and compare passwords. Once verified, suconnect will send to netcat password for next level
 
-### Level 21
+## Level 21
 
 > A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
 
@@ -456,7 +449,7 @@ cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 bandit21@bandit:/etc/cron.d$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 ```
 
-### Level 22
+## Level 22
 
 > A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed. Usefull cmd: cron, crontab, crontab\(5\) \(use “man 5 crontab” to access this\)
 >
@@ -486,7 +479,7 @@ cat /etc/bandit_pass/$myname > /tmp/$mytarget
 
 line 14: `myname=$(whoami)` sets myname to our name. Go ahead and do a `whoami`. It returns who we are logged in as bandit22.
 
-line 15:`mytarget=$(echo I am user $myname | md5sum | cut -d ‘ ‘ -f 1)` looks like the command that is run during this script where `$myname` is set to bandit22 and we know we want bandit23 password. Let’s take that part of the script and replace the `$myname` part with bandit23 instead of letting the script set it to our current uid. 
+line 15:`mytarget=$(echo I am user $myname | md5sum | cut -d ‘ ‘ -f 1)` looks like the command that is run during this script where `$myname` is set to bandit22 and we know we want bandit23 password. Let’s take that part of the script and replace the `$myname` part with bandit23 instead of letting the script set it to our current uid.
 
 ```bash
 bandit22@bandit:~$ echo I am user bandit23 | md5sum | cut -d ' ' -f 1
@@ -494,7 +487,7 @@ bandit22@bandit:~$ echo I am user bandit23 | md5sum | cut -d ' ' -f 1
 bandit22@bandit:~$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
 ```
 
-### Level 23
+## Level 23
 
 > A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.  
 > Useful cmd: cron, crontab, crontab\(5\) \(use “man 5 crontab” to access this\)
@@ -534,7 +527,7 @@ done
 2. Write your own script using vim and save it in that directory and also change permission on it. `#!/bin/bash cat /etc/bandit_pass/bandit24 >> /tmp/tokumei/key`  The script, named copy.sh, will output bandit24 password to  a file called key and append if it exists. _I tried using /etc/bandit\_pass/$\(whoami\) in the scipt but it did not work. Have not figured out why._
 3. Copy copy.sh to bandit24's folder of cronjobs and wait for at least 1 minute and a key file will appear in tokumei's folder. `chmod 777 copy.sh  #change permission access cp copy.sh /var/spool/bandit24/ ls -l /var/spool/bandit24/copy  #to verify if copied`
 
-### Level 24
+## Level 24
 
 > A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.
 
@@ -573,7 +566,7 @@ do
 done
 ```
 
-Run the script for it to generate the two bruteInputs files. 
+Run the script for it to generate the two bruteInputs files.
 
 ```bash
 bandit24@bandit:/tmp/tokumei$ ./generateinput.sh
@@ -620,7 +613,7 @@ I am the pincode checker for user bandit25. Please enter the password for user b
 The password of user bandit25 is {password}
 ```
 
-### Level 25
+## Level 25
 
 > Logging in to bandit26 from bandit25 should be fairly easy… The shell for user bandit26 is not **/bin/bash**, but something else. Find out what it is, how it works and how to break out of it.  
 > useful cmd: ssh, cat, more, vi, ls, id, pwd
@@ -631,11 +624,9 @@ Once logged in, you are presented with an ssh key. Try to ssh using it.
 bandit25@bandit:~$ ssh -i bandit26.sshkey bandit26@localhost
 ```
 
-Login is successful but you get disconnected immediately. Because of the clue "not /bin/bash", look at /etc/passwd.  
+Login is successful but you get disconnected immediately. Because of the clue "not /bin/bash", look at /etc/passwd.
 
-
- /etc/passwd is a text [file](http://www.linfo.org/filedef.html) that contains the attributes of \(i.e., basic information about\) each user or account on a [computer](http://www.linfo.org/computer.html) running [Linux](http://www.linfo.org/linuxdef.html) or another [Unix-like](http://www.linfo.org/unix-like.html) [operating system](http://www.linfo.org/operating_system.html).
-
+/etc/passwd is a text [file](http://www.linfo.org/filedef.html) that contains the attributes of \(i.e., basic information about\) each user or account on a [computer](http://www.linfo.org/computer.html) running [Linux](http://www.linfo.org/linuxdef.html) or another [Unix-like](http://www.linfo.org/unix-like.html) [operating system](http://www.linfo.org/operating_system.html).
 
 one of the lines read out will be  
 `bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext`
@@ -650,7 +641,7 @@ more ~/text.txt
 exit 0
 ```
 
-The trick to solving this challenge is by resizing your terminal so that it barely shows the ascii bandit26 so that it does not load everything it should. 
+The trick to solving this challenge is by resizing your terminal so that it barely shows the ascii bandit26 so that it does not load everything it should.
 
 ![](../../.gitbook/assets/25a.png)
 
@@ -658,11 +649,11 @@ Because it does not load everything it allows you to input something to continue
 
 ![](../../.gitbook/assets/25.png)
 
-### Level 26
+## Level 26
 
 > Good job getting a shell! Now hurry and grab the password for bandit27!
 
-So apparently we still  have the problem of being kicked out when logging in. Once again resize your terminal as above and then get into vim again. We are going to use vim's commands to enter bash.
+So apparently we still have the problem of being kicked out when logging in. Once again resize your terminal as above and then get into vim again. We are going to use vim's commands to enter bash.
 
 ```bash
 :set shell=/bin/bash    # set vim to use /bin/bash as a shell command
@@ -689,10 +680,9 @@ Run a command as another user.
 bandit26@bandit:~$ whoami
 bandit26
 bandit26@bandit:~$ ./bandit27-do cat /etc/bandit_pass/bandit27
-
 ```
 
-### Level 27
+## Level 27
 
 > There is a git repository at `ssh://bandit27-git@localhost/home/bandit27-git/repo`. The password for the user `bandit27-git` is the same as for the user `bandit27`.
 >
@@ -734,7 +724,7 @@ README
 # the password is in the README file
 ```
 
-### Level 28
+## Level 28
 
 > There is a git repository at `ssh://bandit28-git@localhost/home/bandit28-git/repo`. The password for the user `bandit28-git` is the same as for the user `bandit28`.
 >
@@ -822,7 +812,7 @@ index 5c6457b..3f7cee8 100644
 +- password: {password}
 ```
 
-### Level 29
+## Level 29
 
 > There is a git repository at `ssh://bandit28-git@localhost/home/bandit28-git/repo`. The password for the user `bandit28-git` is the same as for the user `bandit28`.
 >
@@ -871,7 +861,7 @@ Some notes for bandit30 of bandit.
 - password: {password}
 ```
 
-### Level 30
+## Level 30
 
 > There is a git repository at `ssh://bandit30-git@localhost/home/bandit30-git/repo`. The password for the user `bandit30-git` is the same as for the user `bandit30`.
 
@@ -892,7 +882,7 @@ bandit30@bandit:/tmp/tokumei/lvl30/repo$ git show secret
 {password}
 ```
 
-### Level 31
+## Level 31
 
 > There is a git repository at `ssh://bandit31-git@localhost/home/bandit31-git/repo`. The password for the user `bandit31-git` is the same as for the user `bandit31`.
 >
@@ -952,7 +942,7 @@ To ssh://localhost/home/bandit31-git/repo
 error: failed to push some refs to 'ssh://bandit31-git@localhost/home/bandit31-git/repo'
 ```
 
-### Level 32
+## Level 32
 
 > After all this `git` stuff its time for another escape. Good luck!
 
@@ -964,10 +954,9 @@ sh: 1: CAT: not found
 sh: 1: CAT: not found
 >> clear
 sh: 1: CLEAR: not found
-
 ```
 
-The problem is no matter what we type, the command is automatically converted to uppercase and will not be recognized. We have to invoke bash using it's special parameter "$0". 
+The problem is no matter what we type, the command is automatically converted to uppercase and will not be recognized. We have to invoke bash using it's special parameter "$0".
 
 ```bash
 >> $0
@@ -985,7 +974,7 @@ $ echo $0
 sh
 ```
 
-### Level 33
+## Level 33
 
 ```text
 bandit33@bandit:~$ ls
