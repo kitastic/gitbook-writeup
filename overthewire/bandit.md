@@ -729,7 +729,279 @@ bandit27@bandit:~$ sudo git init .
 sudo: /usr/bin/sudo must be owned by uid 0 and have the setuid bit set
 bandit27@bandit:~$ git init
 /home/bandit27/.git: Permission denied
+```
 
+Then I remember the /tmp directory that allows me to do almost anything!
 
+```bash
+bandit27@bandit:~$ git clone --no-hardlinks ssh://bandit27-git@localhost/home/bandit27-git/repo /tmp/tokumei/git27
+Cloning into '/tmp/tokumei/git27'...
+Could not create directory '/home/bandit27/.ssh'.
+The authenticity of host 'localhost (127.0.0.1)' can't be established.
+ECDSA key fingerprint is SHA256:98UL0ZWr85496EtCRkKlo20X3OPnyPSB5tB5RPbhczc.
+Are you sure you want to continue connecting (yes/no)? yes
+Failed to add the host to the list of known hosts (/home/bandit27/.ssh/known_hosts).
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit27-git@localhost's password:
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0)
+Receiving objects: 100% (3/3), done.
+bandit27@bandit:~$ cd /tmp/tokumei/git27/
+bandit27@bandit:/tmp/tokumei/git27$ ls
+README
+# the password is in the README file
+```
+
+### Level 28
+
+> There is a git repository at `ssh://bandit28-git@localhost/home/bandit28-git/repo`. The password for the user `bandit28-git` is the same as for the user `bandit28`.
+>
+> Clone the repository and find the password for the next level.
+
+Create a directory in the /tmp folder and then clone repo. Read the README.md.
+
+```bash
+bandit28@bandit:/tmp/tokumei/lvl28/repo$ ls
+README.md
+bandit28@bandit:/tmp/tokumei/lvl28/repo$ cat README.md 
+# Bandit Notes
+Some notes for level29 of bandit.
+
+## credentials
+
+- username: bandit29
+- password: xxxxxxxxxx
+```
+
+After looking through all sorts of folders and files, no luck. The answer if finally in the git log of the repo
+
+```bash
+bandit28@bandit:/tmp/tokumei/lvl28/repo$ git log
+commit 073c27c130e6ee407e12faad1dd3848a110c4f95
+Author: Morla Porla <morla@overthewire.org>
+Date:   Tue Oct 16 14:00:39 2018 +0200
+
+    fix info leak
+
+commit 186a1038cc54d1358d42d468cdc8e3cc28a93fcb
+Author: Morla Porla <morla@overthewire.org>
+Date:   Tue Oct 16 14:00:39 2018 +0200
+
+    add missing data
+
+commit b67405defc6ef44210c53345fc953e6a21338cc7
+Author: Ben Dover <noone@overthewire.org>
+Date:   Tue Oct 16 14:00:39 2018 +0200
+
+    initial commit of README.md
+```
+
+We are currently at commit "fix info leak", we need to go to the previous version "add missing data".
+
+```bash
+bandit28@bandit:/tmp/tokumei/lvl28/repo$ git checkout 186a1038cc54d1358d42d468cdc8e3cc28a93fcb
+Note: checking out '186a1038cc54d1358d42d468cdc8e3cc28a93fcb'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at 186a103... add missing data
+bandit28@bandit:/tmp/tokumei/lvl28/repo$ ls
+README.md
+bandit28@bandit:/tmp/tokumei/lvl28/repo$ cat README.md 
+# Bandit Notes
+Some notes for level29 of bandit.
+
+## credentials
+
+- username: bandit29
+- password: {password}
+```
+
+Another way was to see the difference between both commits
+
+```bash
+bandit28@bandit:/tmp/tokumei/lvl28/repo$ git diff 073c27c130e6ee407e12faad1dd3848a110c4f95 186a1038cc54d1358d42d468cdc8e3cc28a93fcb
+diff --git a/README.md b/README.md
+index 5c6457b..3f7cee8 100644
+--- a/README.md
++++ b/README.md
+@@ -4,5 +4,5 @@ Some notes for level29 of bandit.
+ ## credentials
+
+ - username: bandit29
+-- password: xxxxxxxxxx
++- password: {password}
+```
+
+### Level 29
+
+> There is a git repository at `ssh://bandit28-git@localhost/home/bandit28-git/repo`. The password for the user `bandit28-git` is the same as for the user `bandit28`.
+>
+> Clone the repository and find the password for the next level.
+
+```bash
+bandit29@bandit:/tmp/tokumei/lvl29/repo$ cat README.md 
+# Bandit Notes
+Some notes for bandit30 of bandit.       
+
+## credentials
+
+- username: bandit30
+- password: <no passwords in production!>
+```
+
+Supposedly there are different versions of a product such as the finished product or in development, etc. They can be found in different branches. Switch to dev branch and cat README.md
+
+```bash
+bandit29@bandit:/tmp/tokumei/lvl29/repo$ git branch -a
+* master
+  remotes/origin/HEAD -> origin/master   
+  remotes/origin/dev
+  remotes/origin/master
+  remotes/origin/sploits-dev
+bandit29@bandit:/tmp/tokumei/lvl29/repo$ git checkout remotes/origin/dev
+Note: checking out 'remotes/origin/dev'.
+
+You are in 'detached HEAD' state. You can look around, make experimental  
+changes and commit them, and you can discard any commits you make in this 
+state without impacting any branches by performing another checkout.      
+
+If you want to create a new branch to retain commits you create, you may  
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at 33ce2e9... add data needed for development
+bandit29@bandit:/tmp/tokumei/lvl29/repo$ cat README.md 
+# Bandit Notes
+Some notes for bandit30 of bandit.
+
+## credentials
+
+- username: bandit30
+- password: {password}
+```
+
+### Level 30
+
+> There is a git repository at `ssh://bandit30-git@localhost/home/bandit30-git/repo`. The password for the user `bandit30-git` is the same as for the user `bandit30`.
+
+```bash
+bandit30@bandit:/tmp/tokumei/lvl30/repo$ ls
+README.md
+bandit30@bandit:/tmp/tokumei/lvl30/repo$ cat README.md 
+just an epmty file... muahaha
+bandit30@bandit:/tmp/tokumei/lvl30/repo$
+```
+
+This challenge left no clues. Instead it wants us to learn about git tags.
+
+```bash
+bandit30@bandit:/tmp/tokumei/lvl30/repo$ git tag
+secret
+bandit30@bandit:/tmp/tokumei/lvl30/repo$ git show secret
+{password}
+```
+
+### Level 31
+
+> There is a git repository at `ssh://bandit31-git@localhost/home/bandit31-git/repo`. The password for the user `bandit31-git` is the same as for the user `bandit31`.
+>
+> Clone the repository and find the password for the next level.
+
+```bash
+bandit31@bandit:/tmp/tokumei/lvl31/repo$ cat README.md 
+This time your task is to push a file to the remote repository.
+
+Details:
+    File name: key.txt
+    Content: 'May I come in?'
+    Branch: master
+```
+
+Use vim to create key.txt and fill it with specified content. Using git, add the file, commit, then push the file and you will be presented with the password on reply.
+
+```bash
+bandit31@bandit:/tmp/tokumei/lvl31/repo$ touch key.txt
+bandit31@bandit:/tmp/tokumei/lvl31/repo$ vim key.txt
+bandit31@bandit:/tmp/tokumei/lvl31/repo$ cat key.txt 
+May I come in?
+bandit31@bandit:/tmp/tokumei/lvl31/repo$ git add key.txt 
+The following paths are ignored by one of your .gitignore files:
+key.txt
+Use -f if you really want to add them.
+bandit31@bandit:/tmp/tokumei/lvl31/repo$ git add -f key.txt 
+bandit31@bandit:/tmp/tokumei/lvl31/repo$ git commit -m "adding key.txt"
+[master c3e09ff] adding key.txt
+ 1 file changed, 1 insertion(+)
+ create mode 100644 key.txt
+bandit31@bandit:/tmp/tokumei/lvl31/repo$ git push
+Could not create directory '/home/bandit31/.ssh'.
+The authenticity of host 'localhost (127.0.0.1)' can't be established.
+ECDSA key fingerprint is SHA256:98UL0ZWr85496EtCRkKlo20X3OPnyPSB5tB5RPbhczc.
+Are you sure you want to continue connecting (yes/no)? yes
+Failed to add the host to the list of known hosts (/home/bandit31/.ssh/known_hosts).
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit31-git@localhost's password:
+Counting objects: 3, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 326 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+remote: ### Attempting to validate files... ####
+remote: 
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote:
+remote: Well done! Here is the password for the next level:
+remote: {password}
+remote:
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote:
+To ssh://localhost/home/bandit31-git/repo
+ ! [remote rejected] master -> master (pre-receive hook declined)
+error: failed to push some refs to 'ssh://bandit31-git@localhost/home/bandit31-git/repo'
+```
+
+### Level 32
+
+> After all this `git` stuff its time for another escape. Good luck!
+
+```bash
+WELCOME TO THE UPPERCASE SHELL
+>> cat
+sh: 1: CAT: not found
+>> cat
+sh: 1: CAT: not found
+>> clear
+sh: 1: CLEAR: not found
+
+```
+
+The problem is no matter what we type, the command is automatically converted to uppercase and will not be recognized. We have to invoke bash using it's special parameter "$0". 
+
+```bash
+>> $0
+$ whoami        
+bandit33
+$ cat /etc/bandit_pass/bandit33
+c9c3199ddf4121b10cf581a98d51caee
+# to switch to bash just type bash
+# and from bash switching to sh just type sh
+$ bash
+bandit33@bandit:~$ echo $0
+bash
+bandit33@bandit:~$ sh
+$ echo $0
+sh
 ```
 
