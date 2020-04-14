@@ -1,5 +1,7 @@
 # Bandit Flags
 
+
+
 | Username | Password |
 | :--- | :--- |
 | bandit0 | bandit0 |

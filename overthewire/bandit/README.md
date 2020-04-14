@@ -1,37 +1,23 @@
 # Bandit
 
-## Using WeChall Scoreboard to keep track of progress
+The Bandit wargame is aimed at absolute beginners. It will teach the basics needed to be able to play other wargames. **If you notice something essential is missing or have ideas for new levels, please let us know!**
 
-1. First, go to [WeChall](https://www.wechall.net/) and register for an account.
-2. Next, log in and retrieve your WeChall token and username. Your WeChall username is what you registered with, while your WeChall token can be found on the WeChall website under [“Account” -&gt; “WarBoxes”](https://www.wechall.net/warboxes). The token looks something like “EDD76-1FC9F-7388B-DC6EB-E3F71-FC4CB”.
-3. Next, assuming you are using the correct operating system, edit your ~/.bashrc file and add:
+### Note for beginners <a id="note-for-beginners"></a>
 
-   ```text
-   export WECHALLUSER="YourUserName"
-   export WECHALLTOKEN="YOUR-WECHALL-TOKEN-HERE"
-   ```
+This game, like most other games, is organised in levels. You start at Level 0 and try to “beat” or “finish” it. Finishing a level results in information on how to start the next level. The pages on this website for “Level &lt;X&gt;” contain information on how to start level X from the previous level. E.g. The page for [Level 1](https://overthewire.org/wargames/bandit/bandit1.html) has information on how to gain access from [Level 0](https://overthewire.org/wargames/bandit/bandit0.html) to [Level 1](https://overthewire.org/wargames/bandit/bandit1.html). All levels in this game have a page on this website, and they are all linked to from the sidemenu on the left of this page.
 
-   \*If you are using Windows 10 \(WSL\), you can either use the Ubuntu terminal which automatically loads the bashrc file or the file can be found in _C:\Users\USERNAME\AppData\Local\Packages{LINUX\_DISTRIBUTION}\LocalState\rootfs\home{LINUXUSER}\_
+You will encounter many situations in which you have no idea what you are supposed to do. **Don’t panic! Don’t give up!** The purpose of this game is for you to learn the basics. Part of learning the basics, is reading a lot of new information.
 
-For `fish` users, you may run:
+There are several things you can try when you are unsure how to continue:
 
-```text
-set -Ux WECHALLUSER "YourUserName"
-```
+* First, if you know a command, but don’t know how to use it, try the **manual** \([man page](https://en.wikipedia.org/wiki/Man_page)\) by entering “**man &lt;command&gt;**” \(without the quotes\). e.g. if you know about the “ls” command, type: man ls. The “man” command also has a manual, try it. Press q to quit the man command.
+* Second, if there is no man page, the command might be a **shell built-in**. In that case use the “**help &lt;X&gt;**” command. E.g. help cd
+* Also, your favorite **search-engine** is your friend. Learn how to use it! I recommend [Google](https://www.google.com/).
+* Lastly, if you are still stuck, you can [join us on IRC](https://overthewire.org/information/irc.html)
 
-You may need to logout and login again for these changes to take effect. To test whether the environment variables are registered, type “echo $WECHALLUSER”, which should show that environment variable.
+You’re ready to start! Begin with [Level 0](https://overthewire.org/wargames/bandit/bandit0.html), linked at the left of this page. Good luck!
 
-1. Next, edit ~/.ssh/config \(or create it if it doesn’t exist\) and add:
-
-   ```text
-   Host *.labs.overthewire.org
-     SendEnv WECHALLTOKEN
-     SendEnv WECHALLUSER
-   ```
-
-   This configures your SSH client to transmit both username and token to your remote session, so it can be used there.
-
-2. Finally, you are able to easily register which levels you have beaten on OverTheWire by logging in through SSH the normal way, and invoking the “wechall” command. This command will use your WeChall username and WeChall token to register the level you have beaten with WeChall. `WECHALLUSER="tokumeipoh" WECHALLTOKEN="129CF-40592-FCDCF-67470-6F4EA-D5DB1" wechall`
+**Note for VMs:** You may fail to connect to overthewire.org via SSH with a “_broken pipe error_” when the network adapter for the VM is configured to use NAT mode. Adding the setting **`IPQoS throughput`** to `/etc/ssh/ssh_config` should resolve the issue. If this does not solve your issue, the only option then is to change the adapter to Bridged mode.
 
 ### Level 0
 
@@ -261,8 +247,6 @@ data8: ASCII text
 bandit12@bandit:/tmp/poh$ cat data8
 ```
 
-bandit13 / 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
-
 ### Level 13
 
 > The password for the next level is stored in **/etc/bandit\_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. **Note:** **localhost** is a hostname that refers to the machine you are working on
@@ -284,10 +268,8 @@ bandit13@bandit:~$ ssh -i sshkey.private bandit14@localhost
 You can talk to localhost by using netcat by echoing. \[[linux.die.net](https://linux.die.net/man/1/nc)\]
 
 ```bash
-echo "4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e" | nc localhost 30000
+echo "{password}" | nc localhost 30000
 ```
-
-bandit15 / BfMYroe26WYalil77FoDi9qh59eK5xNr
 
 ### Level 15
 
@@ -297,7 +279,7 @@ bandit15 / BfMYroe26WYalil77FoDi9qh59eK5xNr
 > in this version of that command…**
 
 ```bash
-bandit15@bandit:~$ echo "BfMYroe26WYalil77FoDi9qh59eK5xNr" | openssl s_client -connect localhost:30001 -quiet
+bandit15@bandit:~$ echo "{password}" | openssl s_client -connect localhost:30001 -quiet
 depth=0 CN = localhost
 verify error:num=18:self signed certificate
 verify return:1
@@ -341,7 +323,7 @@ Nmap done: 1 IP address (1 host up) scanned in 89.37 seconds
 Results show that port 31790 is open with ssl service. Now echo current password to retrieve RSA private key.
 
 ```bash
-bandit16@bandit:~$ echo "cluFn7wTiGryunymYOu4RcffSxQluehd" | openssl s_client -connect localhost:31790 -quiet
+bandit16@bandit:~$ echo "{password}" | openssl s_client -connect localhost:31790 -quiet
 ```
 
 I saved the key in a file called _17loginkey._ In order to use the key successfully, the file permission must be changed to user specific. Then change cwd to where the key is stored and login with optional key.
@@ -436,7 +418,7 @@ _Now once inside tmux, all commands are prefixed with ctrl+b
 - detach from tmux \[ctrl+b d\]_
 {% endhint %}
 
-![tmux implementation](../.gitbook/assets/20result.png)
+![tmux implementation](../../.gitbook/assets/20result.png)
 
 1. In the bottom pane, set netcat to listen on 1234 \(arbitrarily chosen\) and send it bandit20's password file.
 2. Move to top pane and execute suconnect with 1234 as parameter. suconnect will read the text from netcat and compare passwords. Once verified, suconnect will send to netcat password for next level
@@ -670,11 +652,11 @@ exit 0
 
 The trick to solving this challenge is by resizing your terminal so that it barely shows the ascii bandit26 so that it does not load everything it should. 
 
-![](../.gitbook/assets/25a.png)
+![](../../.gitbook/assets/25a.png)
 
 Because it does not load everything it allows you to input something to continue. Instead of loading more, press `v` to open vim editor. Once in vim, type `:e /etc/bandit_pass/bandit26` in order to open and edit that file. Upon successful, the password will be shown in line 1 of the text file.
 
-![](../.gitbook/assets/25.png)
+![](../../.gitbook/assets/25.png)
 
 ### Level 26
 
@@ -709,8 +691,6 @@ bandit26
 bandit26@bandit:~$ ./bandit27-do cat /etc/bandit_pass/bandit27
 
 ```
-
-3ba3118a22e93127a4ed485be72ef5ea
 
 ### Level 27
 
