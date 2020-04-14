@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Capture The Flag](./)
+* [Capture The Flag](README.md)
 
 ## OverTheWire
 
