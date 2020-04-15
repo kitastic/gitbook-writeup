@@ -49,3 +49,27 @@ There is nothing on this page
 
 This indicates usage of robots.txt to prevent webcrawlers \(e.g. Google\) from indexing site or particular location on server.[ \[info\]](https://www.robotstxt.org/) It is usually located in the root directory. [`http://natas3.natas.labs.overthewire.org/robots.txt`](http://natas3.natas.labs.overthewire.org/robots.txt)\`\`
 
+> User-agent: \*   
+> Disallow: /s3cr3t/
+
+The content of this robots.txt shows that it blocks all robots from going to folder s3cr3t. So go to [`http://natas3.natas.labs.overthewire.org/s3cr3t/`](http://natas3.natas.labs.overthewire.org/s3cr3t/) and you wil see the user.txt.
+
+### Level 4
+
+![](../../.gitbook/assets/n4%20%282%29.png)
+
+HTTP referrer problem. Run burp suite and change proxy in browser. [\[Tutorial to setup Burp\]](../../tools-setup/burp-suite.md)  
+Once Burp is running, hit the Refresh page link and you will see the following in Burp.
+
+![](../../.gitbook/assets/n4%20%281%29.png)
+
+Manually change the Referer to natas5 and click Forward.
+
+![](../../.gitbook/assets/n41.png)
+
+The browser will be reloaded with the next level's password.
+
+### Level 5
+
+
+

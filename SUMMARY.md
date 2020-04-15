@@ -7,3 +7,7 @@
   * [Natas](overthewire/natas/README.md)
     * [Natas Flags](overthewire/natas/natas-flags.md)
 
+## Tools Setup
+
+* [Burp Suite](tools-setup/burp-suite.md)
+
