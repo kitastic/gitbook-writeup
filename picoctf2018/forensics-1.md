@@ -144,5 +144,112 @@ b4,abgr,msb,xy      .. text: "EO%O#/c/2/C_e_q"
 > There used to be a bunch of [animals](https://2018shell.picoctf.com/static/1603334c6d1519a49283974d0d480ffe/animals.dd) here, what did Dr. Xernon do to them?  
 > Hint: Some files have been deleted from the disk image, but are they really gone?
 
+ DD file is a [disk image](https://www.whatisfileextension.com/disk-image/) file and replica of a hard disk drive. The file having extension .dd is usually created with an imaging tool called DD. The utility provides command line interface to create disk images in a system running UNIX & LINUX OS. [\[info\]](https://www.whatisfileextension.com/dd/)
 
+7zip can actually extract the .dd file. Install: `sudo apt install p7zip-full p7zip-rar` [\[info\]](https://www.tecmint.com/7zip-command-examples-in-linux/)
+
+```bash
+# 7z extract animals.dd 
+# -oanimal means setting specified output directory named "animal"
+poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018$ 7z e animals.dd -oanimal
+
+7-Zip [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C.UTF-8,Utf16=on,HugeFiles=on,64 bits,8 CPUs Intel(R) Core(TM) i7-8650U CPU @ 
+1.90GHz (806EA),ASM,AES-NI)
+
+Scanning the drive for archives:
+1 file, 10485760 bytes (10 MiB)
+
+Extracting archive: animals.dd
+--
+Path = animals.dd
+Type = FAT
+Physical Size = 10485760
+File System = FAT16
+Cluster Size = 2048
+Free Space = 8706048
+Headers Size = 37376
+Sector Size = 512
+ID = 2607173086
+
+Everything is Ok
+
+Files: 4
+Size:       1736281
+Compressed: 10485760
+```
+
+4 images are extracted from the drive, but according to the hint, we need to dig deeper with `foremost` . Foremost is a forensic data recovery program for Linux used to recover files using their headers, footers, and data structures through a process known as file carving. To install:  
+ `sudo apt install foremost`
+
+```bash
+poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018$ foremost -v -o animals_foremost animals.dd
+Foremost version 1.5.7 by Jesse Kornblum, Kris Kendall, and Nick Mikus
+Audit File
+
+Foremost started at Sat Apr 18 16:29:07 2020
+Invocation: foremost -v -o animals_foremost animals.dd
+Output directory: /mnt/d/pradagy/projects/ctf/pico2018/animals_foremost
+Configuration file: /etc/foremost.conf
+Processing: animals.dd
+|------------------------------------------------------------------
+File: animals.dd
+Start: Sat Apr 18 16:29:07 2020
+Length: 10 MB (10485760 bytes)
+
+Num      Name (bs=512)         Size      File Offset     Comment
+
+0:      00000077.jpg         617 KB           39424
+1:      00001313.jpg         481 KB          672256
+2:      00002277.jpg         380 KB         1165824
+3:      00003041.jpg         248 KB         1556992
+4:      00003541.jpg         314 KB         1812992
+5:      00004173.jpg         458 KB         2136576
+6:      00005093.jpg         383 KB         2607616
+7:      00005861.jpg          39 KB         3000832
+*|
+Finish: Sat Apr 18 16:29:07 2020
+
+8 FILES EXTRACTED
+
+jpg:= 8
+------------------------------------------------------------------
+
+Foremost finished at Sat Apr 18 16:29:07 2020
+```
+
+This time you see more images are found in the animals\_foremost folder and 00005861.jpg shows the flag.  picoCTF{th3\_5n4p\_happ3n3d}
+
+**admin panel - Points: 150**
+
+> We captured some [traffic](https://2018shell.picoctf.com/static/162c41cc965c3db31c3acffecc3b2c87/data.pcap) logging into the admin panel, can you find the password?  
+> Hint: Tools like wireshark are pretty good for analyzing pcap files.
+
+Open the pcap file with wireshark. You can filter the list for http and browse around. To get the flag go to File &gt; Export Objects &gt; HTTP ... and choose save all. Then cat each file until you see the flag
+
+```text
+poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/admin panel$ ll
+total 36
+-rwxrwxrwx 1 poh poh  2149 Apr 18 16:53  %5c*
+-rwxrwxrwx 1 poh poh  2149 Apr 18 16:53 '%5c(2)'*
+drwxrwxrwx 1 poh poh  4096 Apr 18 16:53  ./
+drwxrwxrwx 1 poh poh  4096 Apr 18 16:39  ../
+-rwxrwxrwx 1 poh poh  1944 Apr 18 16:53  admin*
+-rwxrwxrwx 1 poh poh 18556 Apr 18 16:39  data.pcap*
+-rwxrwxrwx 1 poh poh    28 Apr 18 16:53  login*
+-rwxrwxrwx 1 poh poh   219 Apr 18 16:53 'login(2)'*
+-rwxrwxrwx 1 poh poh    47 Apr 18 16:53 'login(4)'*
+-rwxrwxrwx 1 poh poh  1359 Apr 18 16:53 'login(6)'*
+-rwxrwxrwx 1 poh poh   209 Apr 18 16:53  logout*
+
+poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/admin panel$ cat login
+user=jimmy&password=p4ssw0rd
+poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/admin panel$ cat 'login(2)'
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>Redirecting...</title>
+<h1>Redirecting...</h1>
+<p>You should be redirected automatically to target URL: <a href="/admin">/admin</a>.  If not click the link.
+poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/admin panel$ cat 'login(4)'
+user=admin&password=picoCTF{n0ts3cur3_df598569}
+```
 

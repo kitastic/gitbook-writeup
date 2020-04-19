@@ -7,7 +7,7 @@
   * [Natas](overthewire/natas/README.md)
     * [Natas Flags](overthewire/natas/natas-flags.md)
 * [PicoCTF2018](picoctf2018/README.md)
-  * [Binary Exploit](picoctf2018/binary-exploit.md)
+  * [Binary Exploitation](picoctf2018/binary-exploit.md)
   * [Cryptography](picoctf2018/cryptography.md)
   * [Forensics](picoctf2018/forensics-1.md)
   * [General Skills](picoctf2018/general-skills.md)

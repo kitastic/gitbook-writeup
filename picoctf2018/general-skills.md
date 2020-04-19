@@ -154,3 +154,13 @@ Major General John M. Schofield's graduation address to the graduating class of 
 harsh or tyrannical treatment.On the contrary, such treatment is far more likely
 ```
 
+**environ - Points: 150**
+
+> Sometimes you have to configure environment variables before executing a program. Can you find the flag we've hidden in an environment variable on the shell server?  
+> Hint:  unix [env](https://www.tutorialspoint.com/unix/unix-environment.htm)
+
+```text
+# printenv prints all environmental variables
+printenv | grep "picoCTF"
+```
+
