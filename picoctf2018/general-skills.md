@@ -2,7 +2,7 @@
 
 
 
-### **grep 1 - Points: 75 - \(Solves: 38278\)General Skills**
+### **grep 1 - Points: 75**
 
 > Can you find the flag in [file](https://2018shell.picoctf.com/static/805ac70722810caa0b1c02bc88ef68d8/file)? This would be really obnoxious to look through by hand, see if you can find a faster way. You can also find the file in /problems/grep-1\_0\_c0c0c16438cdbee39591397e16389f59 on the shell server.
 
@@ -11,7 +11,7 @@ tokumeipoh@pico-2018-shell:/problems/grep-1_0_c0c0c16438cdbee39591397e16389f59$ 
 picoCTF{grep_and_you_will_find_52e63a9f}
 ```
 
-### **net cat - Points: 75 - \(Solves: 33835\)General Skills**
+### **net cat - Points: 75**
 
 > Using netcat \(nc\) will be a necessity throughout your adventure. Can you connect to `2018shell.picoctf.com` at port `22847` to get the flag?
 
@@ -23,11 +23,9 @@ picoCTF{NEtcat_iS_a_NEcESSiTy_69222dcc}
 
 
 
-**strings - Points: 100 - \(Solves: 24664\)General Skills**
+### **strings - Points: 100**
 
 > Can you find the flag in this [file](https://2018shell.picoctf.com/static/e78981e684a62559baaef12a27f0e918/strings) without actually running it? You can also find the file in /problems/strings\_0\_bf57524acf558aca2081eb97ece8e2ee on the shell server.
-
-### 
 
 Using strings alone will show too much information in terminal, therefore, use grep also to find flag.
 
@@ -37,7 +35,7 @@ tokumeipoh@pico-2018-shell:~$ strings /problems/strings_0_bf57524acf558aca2081eb
 picoCTF{sTrIngS_sAVeS_Time_c09b1444}
 ```
 
-**pipe - Points: 110 - \(Solves: 22857\)General Skills**
+### **pipe - Points: 110**
 
 > During your adventure, you will likely encounter a situation where you need to process data that you receive over the network rather than through a file. Can you find a way to save the output from this program and search for the flag? Connect with `2018shell.picoctf.com 2015`
 
@@ -46,16 +44,16 @@ tokumeipoh@pico-2018-shell:~$ nc 2018shell.picoctf.com 2015 | grep "picoCTF{"
 picoCTF{almost_like_mario_8861411c}
 ```
 
-**Inspect Me - Points: 125 - \(Solves: 29304\)Web Exploitation**
+### **Inspect Me - Points: 125**
 
 > Inpect this code! `http://2018shell.picoctf.com:56252` \([link](http://2018shell.picoctf.com:56252/)\)
 
 Load the page in browser and start developer tools with ctrl+shift+i. Under sources tab, in main folder called 2018shell.picoctf.com:56252 will be 3 files.   
-\(index\) at line 31 is 1/3 of flag: picoCTF{ur\_4\_real\_1nspe  
-mycss.css at line 51 is 2/3 of flag: ct0r\_g4dget\_9dd3b33c}  
-3/3 of flag is not really needed because we already have completed flag.
+- \(index\) at line 31 is 1/3 of flag: picoCTF{ur\_4\_real\_1nspe  
+- mycss.css at line 51 is 2/3 of flag: ct0r\_g4dget\_9dd3b33c}  
+- 3/3 of flag is not really needed because we already have completed flag.
 
-**grep 2 - Points: 125 - \(Solves: 21273\)General Skills**
+### **grep 2 - Points: 125**
 
 > This one is a little bit harder. Can you find the flag in /problems/grep-2\_2\_413a577106278d0711d28a98f4f6ac28/files on the shell server? Remember, grep is your friend.
 
@@ -78,7 +76,7 @@ tokumeipoh@pico-2018-shell:/problems/grep-2_2_413a577106278d0711d28a98f4f6ac28/f
 ../files5/file24:picoCTF{grep_r_and_you_will_find_8eb84049}
 ```
 
-**Aca-Shell-A - Points: 150 - \(Solves: 18373\)General Skills**
+### **Aca-Shell-A - Points: 150**
 
 > It's never a bad idea to brush up on those linux skills or even learn some new ones before you set off on this adventure! Connect with `nc 2018shell.picoctf.com 33158`.
 
@@ -154,7 +152,7 @@ Major General John M. Schofield's graduation address to the graduating class of 
 harsh or tyrannical treatment.On the contrary, such treatment is far more likely
 ```
 
-**environ - Points: 150**
+### **environ - Points: 150**
 
 > Sometimes you have to configure environment variables before executing a program. Can you find the flag we've hidden in an environment variable on the shell server?  
 > Hint:  unix [env](https://www.tutorialspoint.com/unix/unix-environment.htm)
