@@ -109,7 +109,7 @@ Correct!
 Great job. You've earned the flag: picoCTF{J4y_s0n_d3rUUUULo_a062e5f8}
 ```
 
-**Reading Between the Eyes - Points: 150**
+### **Reading Between the Eyes - Points: 150**
 
 > Stego-Saurus hid a message for you in this [image](https://2018shell.picoctf.com/static/9129761dbc4bf494c47429f85ddf7434/husky.png), can you retreive it?  
 > Hint: maybe you can find an online decoder?
@@ -139,7 +139,7 @@ b4,rgba,lsb,xy      .. text: "?5/%/d_tO"
 b4,abgr,msb,xy      .. text: "EO%O#/c/2/C_e_q"
 ```
 
-**Recovering From the Snap - Points: 150**
+### **Recovering From the Snap - Points: 150**
 
 > There used to be a bunch of [animals](https://2018shell.picoctf.com/static/1603334c6d1519a49283974d0d480ffe/animals.dd) here, what did Dr. Xernon do to them?  
 > Hint: Some files have been deleted from the disk image, but are they really gone?
@@ -220,7 +220,7 @@ Foremost finished at Sat Apr 18 16:29:07 2020
 
 This time you see more images are found in the animals\_foremost folder and 00005861.jpg shows the flag.  picoCTF{th3\_5n4p\_happ3n3d}
 
-**admin panel - Points: 150**
+### **admin panel - Points: 150**
 
 > We captured some [traffic](https://2018shell.picoctf.com/static/162c41cc965c3db31c3acffecc3b2c87/data.pcap) logging into the admin panel, can you find the password?  
 > Hint: Tools like wireshark are pretty good for analyzing pcap files.
@@ -251,5 +251,23 @@ poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/admin panel$ cat 'login(2)'
 <p>You should be redirected automatically to target URL: <a href="/admin">/admin</a>.  If not click the link.
 poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/admin panel$ cat 'login(4)'
 user=admin&password=picoCTF{n0ts3cur3_df598569}
+```
+
+### **hex editor - Points: 150**
+
+> This [cat](https://2018shell.picoctf.com/static/1b3f7771b439137d8a9e5cf07d8e3e2d/hex_editor.jpg) has a secret to teach you. You can also find the file in /problems/hex-editor\_4\_0a7282b29fa47d68c3e2917a5a0d726b on the shell server.  
+> Hints:
+>
+> * What is a hex editor?
+> * Maybe google knows.
+> * [xxd](http://linuxcommand.org/man_pages/xxd1.html)
+> * [hexedit](http://linuxcommand.org/man_pages/hexedit1.html)
+> * [bvi](http://manpages.ubuntu.com/manpages/natty/man1/bvi.1.html)
+
+If you open the picture with a hex editor you can see the flag at the end of the file. Instead, i used this command in bash to find it faster.
+
+```text
+strings hex_editor.jpg | grep picoCTF
+Your flag is: "picoCTF{and_thats_how_u_edit_hex_kittos_dF817ec5}"
 ```
 

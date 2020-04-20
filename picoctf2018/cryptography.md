@@ -36,13 +36,7 @@ picoCTF{justagoodoldcaesarcipherobyujeez}
 ### Hertz **- Points: 150**
 
 > Here's another simple cipher for you where we made a bunch of substitutions. Can you decrypt it? Connect with `nc 2018shell.picoctf.com 18581`.  
-> Hints:
->
-> * What is a hex editor?
-> * Maybe google knows.
-> * [xxd](http://linuxcommand.org/man_pages/xxd1.html)
-> * [hexedit](http://linuxcommand.org/man_pages/hexedit1.html)
-> * [bvi](http://manpages.ubuntu.com/manpages/natty/man1/bvi.1.html)
+> Hints: NOTE: Flag is not in the usual flag format
 
 Once you login, you are shown a long text. Using this site, [https://quipqiup.com/](https://quipqiup.com/), helps solve the problem. I learned from this substitution type of cipher requires more data to be more accurate. E.g. when I only provided the header:
 
