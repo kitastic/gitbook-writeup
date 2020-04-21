@@ -58,3 +58,23 @@ stately, plump buck mulligan came from the stairhead, bearing a bowl of lather o
 
 picoCTF{_substitution\_ciphers\_are\_solvable\_cdilgndlnp}_
 
+### **Blaise's cipher - Points: 200** 
+
+> My buddy Blaise told me he learned about this cool cipher invented by a guy also named Blaise! Can you figure out what it says? Connect with `nc 2018shell.picoctf.com 11281`.  
+> Hint: There are tools that make this easy. This cipher was NOT invented by Pascal.
+
+Using [https://www.boxentriq.com/code-breaking/vigenere-cipher](https://www.boxentriq.com/code-breaking/vigenere-cipher) I pasted the whole message and found the key to be "flag" and then used that key to fully decode the message. The flag was at the end of the 3rd paragraph.
+
+picoCTF{v1gn3r3\_c1ph3rs\_ar3n7\_bad\_5352bf72}
+
+### **Hertz 2 - Points: 200**
+
+> This flag has been encrypted with some kind of cipher, can you decrypt it? Connect with `nc 2018shell.picoctf.com 12521`.
+
+Used: [https://quipqiup.com/](https://quipqiup.com/)  
+picoCTF{substitution\_ciphers\_are\_too\_easy\_gmnibirtnv}
+
+
+
+
+

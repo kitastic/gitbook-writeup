@@ -86,7 +86,7 @@ while (questionsRemaining > 0):
     questionsRemaining -= 1      
 ```
 
-```bash
+```c
 You'll need to consult the file `incidents.json` to answer the following questions.
 
 
@@ -220,7 +220,7 @@ Foremost finished at Sat Apr 18 16:29:07 2020
 
 This time you see more images are found in the animals\_foremost folder and 00005861.jpg shows the flag.  picoCTF{th3\_5n4p\_happ3n3d}
 
-### **admin panel - Points: 150**
+### **Admin panel - Points: 150**
 
 > We captured some [traffic](https://2018shell.picoctf.com/static/162c41cc965c3db31c3acffecc3b2c87/data.pcap) logging into the admin panel, can you find the password?  
 > Hint: Tools like wireshark are pretty good for analyzing pcap files.
@@ -253,7 +253,7 @@ poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/admin panel$ cat 'login(4)'
 user=admin&password=picoCTF{n0ts3cur3_df598569}
 ```
 
-### **hex editor - Points: 150**
+### **Hex editor - Points: 150**
 
 > This [cat](https://2018shell.picoctf.com/static/1b3f7771b439137d8a9e5cf07d8e3e2d/hex_editor.jpg) has a secret to teach you. You can also find the file in /problems/hex-editor\_4\_0a7282b29fa47d68c3e2917a5a0d726b on the shell server.  
 > Hints:
@@ -269,5 +269,39 @@ If you open the picture with a hex editor you can see the flag at the end of the
 ```text
 strings hex_editor.jpg | grep picoCTF
 Your flag is: "picoCTF{and_thats_how_u_edit_hex_kittos_dF817ec5}"
+```
+
+### **Truly an Artist - Points: 200**
+
+> Can you help us find the flag in this [Meta-Material](https://2018shell.picoctf.com/static/a386ed9a7534702173762cf536dce121/2018.png)? You can also find the file in /problems/truly-an-artist\_2\_61a3ed7216130ab1c2b2872eeda81348.  
+> Hint: Try looking beyond the image. Who created this?
+
+I show two methods. First with exiftool to show meta info, then just strings command.
+
+```text
+poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/trulyAnArtist$ exiftool 2018.png 
+ExifTool Version Number         : 10.80
+File Name                       : 2018.png
+Directory                       : .
+File Size                       : 13 kB
+File Modification Date/Time     : 2020:04:20 14:46:23-05:00
+File Access Date/Time           : 2020:04:20 14:46:23-05:00
+File Inode Change Date/Time     : 2020:04:20 14:46:28-05:00
+File Permissions                : rwxrwxrwx
+File Type                       : PNG
+File Type Extension             : png
+MIME Type                       : image/png
+Image Width                     : 1200
+Image Height                    : 630
+Bit Depth                       : 8
+Color Type                      : RGB
+Compression                     : Deflate/Inflate
+Filter                          : Adaptive
+Interlace                       : Noninterlaced
+Artist                          : picoCTF{look_in_image_7e31505f}
+Image Size                      : 1200x630
+Megapixels                      : 0.756
+poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/trulyAnArtist$ strings 2018.png | grep picoCTF
+picoCTF{look_in_image_7e31505f}
 ```
 
