@@ -305,3 +305,71 @@ poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/trulyAnArtist$ strings 2018.
 picoCTF{look_in_image_7e31505f}
 ```
 
+### **Now you don't - Points: 200**
+
+> We heard that there is something hidden in this [picture](https://2018shell.picoctf.com/static/eee00c8559a93bfde1241d5e00c2df37/nowYouDont.png). Can you find it?  
+> Hint: There is an old saying: if you want to hide the treasure, put it in plain sight. Then no one will see it. Is it really all one shade of red?
+
+These sites can easily decode the image and show the flag:  
+[https://osric.com/chris/steganography/decode.html](https://osric.com/chris/steganography/decode.html)  
+[https://29a.ch/photo-forensics/\#forensic-magnifier](https://29a.ch/photo-forensics/#forensic-magnifier)
+
+I wanted to improve my Python so I first created a script that checks the red values in each pixel to verify the hint.
+
+```python
+from PIL import Image
+
+imageFile = "nowYouDont.png"
+try:
+    img = Image.open(imageFile)
+except IOError:
+    pass
+
+data = list(img.getdata())
+# get only the red band in image data, the first few values are 145
+# so check the rest to see if there is a difference
+redBand = list(img.getdata(band=0))
+flag = "green"
+for values in redBand:
+    if values != 145:
+        flag = "red"
+                
+print(flag)
+```
+
+And "red" was printed indicating not all reds are the same shade. And thanks to this [site](https://en.wikibooks.org/wiki/Python_Imaging_Library/Editing_Pixels) I was able to write a simple script to reveal the flag
+
+```python
+from PIL import Image
+from contextlib import contextmanager
+
+imageFile = "nowYouDont.png"
+
+@contextmanager
+def openImg(file):
+    try:
+        img = Image.open(file)
+        yield img
+    finally:
+        img.close()
+        
+# open and copy image
+with openImg(imageFile) as i:
+    image = i.copy()
+    
+# create a pixel map
+pixelMap = image.load()
+for i in range(image.width):
+    for j in range(image.height):
+        # pix = (r, g, b, a)
+        pix = pixelMap[i,j]
+        # if r value in pixel is not 145 (common value seen)
+        if pix[0] != 145:
+            # set pixel = (r=0, g, b, a)
+            pixelMap[i,j] = (0, pix[1], pix[2], pix[3] )
+            
+image.show()
+```
+
+picoCTF{n0w\_y0u\_533\_m3}
+

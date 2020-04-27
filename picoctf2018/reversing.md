@@ -335,3 +335,10 @@ $2 = 59
 (gdb)
 ```
 
+### **Quackme - Points: 200**
+
+> Can you deal with the Duck Web? Get us the flag from this [program](https://2018shell.picoctf.com/static/3a9e7a6330d134243900d8413b326a60/main). You can also find the program in /problems/quackme\_0\_29c1eeadf7509d3b370e5d76c6fa54e5.  
+> Hint: Objdump or something similar is probably a good place to start.
+
+
+

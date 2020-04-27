@@ -162,3 +162,32 @@ harsh or tyrannical treatment.On the contrary, such treatment is far more likely
 printenv | grep "picoCTF"
 ```
 
+### **Ssh-keyz - Points: 150**
+
+> As nice as it is to use our webshell, sometimes its helpful to connect directly to our machine. To do so, please add your own public key to ~/.ssh/authorized\_keys, using the webshell. The flag is in the ssh banner which will be displayed when you login remotely with ssh to with your username.  
+> Hint: key generation [tutorial](https://confluence.atlassian.com/bitbucketserver/creating-ssh-keys-776639788.html). We also have an expert demonstrator to help you along. [link](https://www.youtube.com/watch?v=3CN65ccfllU&list=PLJ_vkrXdcgH-lYlRV8O-kef2zWvoy79yP&index=4)
+
+Keys are located in home directory in .ssh folder. Remember to back up old keys if they exists!
+
+```bash
+# go to home folder and into .ssh (or make folder if doesnt exist)
+cd
+cd .ssh
+ssh-keygen -t rsa -C "your_email@example.com"
+# press Enter to accept default location
+# passphrase (or blank) and Enter twice
+# view key
+cat id_rsa.pub
+```
+
+Now login to picoctf
+
+```bash
+mkdir .ssh && cd $_
+cat > authorized_keys
+# paste key and press enter
+# logoff and logon to see flag
+```
+
+picoCTF{who\_n33ds\_p4ssw0rds\_38dj21}
+

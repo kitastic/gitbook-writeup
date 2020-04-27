@@ -26,7 +26,7 @@ Password: hellokitty
 picoCTF{J0hn_1$_R1pp3d_99c35524}
 ```
 
-### **caesar cipher 1 - Points: 150**
+### **Caesar cipher 1 - Points: 150**
 
 > This is one of the older ciphers in the books, can you decrypt the [message](https://2018shell.picoctf.com/static/6b5626c0736d9090f5d98de74eec4543/ciphertext)? You can find the ciphertext in /problems/caesar-cipher-1\_0\_931ac10f43e4d2ee03d76f6914a07507 on the shell server.
 
