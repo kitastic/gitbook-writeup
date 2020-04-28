@@ -4,7 +4,7 @@
 
 sample.s file:
 
-```text
+```asm
 .intel_syntax noprefix
 .bits 32
 
