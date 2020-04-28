@@ -57,7 +57,7 @@ Load the page in browser and start developer tools with ctrl+shift+i. Under sour
 
 > This one is a little bit harder. Can you find the flag in /problems/grep-2\_2\_413a577106278d0711d28a98f4f6ac28/files on the shell server? Remember, grep is your friend.
 
-```text
+```bash
 tokumeipoh@pico-2018-shell:/problems/grep-2_2_413a577106278d0711d28a98f4f6ac28/files$ ll
 total 48
 drwxr-xr-x 12 root root 4096 Mar 25  2019 ./     
