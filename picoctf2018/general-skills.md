@@ -191,3 +191,10 @@ cat > authorized_keys
 
 picoCTF{who\_n33ds\_p4ssw0rds\_38dj21}
 
+### **What base is this? - Points: 200**
+
+> To be successful on your mission, you must be able read data represented in different ways, such as hexadecimal or binary. Can you get the flag from this program to prove you are ready? Connect with `nc 2018shell.picoctf.com 1225`.  
+> Hint: I hear python is a good means \(among many\) to convert things. It might help to have multiple windows open
+
+
+
