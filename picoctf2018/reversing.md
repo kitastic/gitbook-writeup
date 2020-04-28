@@ -62,7 +62,7 @@ int main(void) {
 
 for the number of arguments of the asm function, you can look at the problem description. asm3 is declared as extern, meaning it will look for it in another file at compile\(/linking?\) time. now just compile them together and execute the resulting executable
 
-```text
+```bash
 [andrei@jacky 15:27:00] ~/Documents/pico/3
 ——> nasm -f elf32 end_asm_rev.S -o asmfun.o
 [andrei@jacky 15:27:42] ~/Documents/pico/3
