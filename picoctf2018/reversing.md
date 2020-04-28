@@ -1,62 +1,62 @@
 # Reversing
 
-### Compile and Execute .S files
+## Compile and Execute .S files
 
 sample.s file:
 
-```nasm
+```text
 .intel_syntax noprefix
 .bits 32
 
 .global asm3
 
 asm3:
-	push   	ebp
-	mov    	ebp,esp
-	mov	eax,0x19
-	xor	al,al
-	mov	ah,BYTE PTR [ebp+0xa]
-	sal	ax,0x10
-	sub	al,BYTE PTR [ebp+0xd]
-	add	ah,BYTE PTR [ebp+0xc]
-	xor	ax,WORD PTR [ebp+0x12]
-	mov	esp, ebp
-	pop	ebp
-	ret
+    push       ebp
+    mov        ebp,esp
+    mov    eax,0x19
+    xor    al,al
+    mov    ah,BYTE PTR [ebp+0xa]
+    sal    ax,0x10
+    sub    al,BYTE PTR [ebp+0xd]
+    add    ah,BYTE PTR [ebp+0xc]
+    xor    ax,WORD PTR [ebp+0x12]
+    mov    esp, ebp
+    pop    ebp
+    ret
 ```
 
 we can make it a shared library and export its function asm3. let’s just make it compatible with nasm assembler: delete the ‘PTR’ and change the first lines as follows:
 
-```nasm
+```text
 section .text
 global asm3
 
 asm3:
-	push   	ebp
-	mov    	ebp,esp
-	mov	eax,0x19
-	xor	al,al
-	mov	ah,BYTE [ebp+0xa]
-	sal	ax,0x10
-	sub	al,BYTE [ebp+0xd]
-	add	ah,BYTE [ebp+0xc]
-	xor	ax,WORD [ebp+0x12]
-	mov	esp, ebp
-	pop	ebp
-	ret
+    push       ebp
+    mov        ebp,esp
+    mov    eax,0x19
+    xor    al,al
+    mov    ah,BYTE [ebp+0xa]
+    sal    ax,0x10
+    sub    al,BYTE [ebp+0xd]
+    add    ah,BYTE [ebp+0xc]
+    xor    ax,WORD [ebp+0x12]
+    mov    esp, ebp
+    pop    ebp
+    ret
 ```
 
 now we can write a little C program that uses the exported library:
 
-```C
+```c
 #include <stdio.h>
 extern int asm3(int a, int b, int c);
 
 int main(void) {
 
-	printf("0x%x\n", asm3(0xb5e8e971,0xc6b58a95,0xe20737e9));
+    printf("0x%x\n", asm3(0xb5e8e971,0xc6b58a95,0xe20737e9));
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -72,10 +72,10 @@ for the number of arguments of the asm function, you can look at the problem des
 0x7771
 ```
 
-### **Assembly-0 - Points: 150**
+## **Assembly-0 - Points: 150**
 
 > What does asm0\(0xaa,0xf2\) return? Submit the flag as a hexadecimal value \(starting with '0x'\). NOTE: Your submission for this question will NOT be in the normal flag format. [Source](https://2018shell.picoctf.com/static/5359d5442f2379ae9948dfeebe80d8f8/intro_asm_rev.S) located in the directory at /problems/assembly-0\_2\_485b2d48345b19addbeb06a36aabdc74.  
-> Hint: 
+> Hint:
 >
 > * basical assembly [tutorial](https://www.tutorialspoint.com/assembly_programming/assembly_basic_syntax.htm)
 > * assembly [registers](https://www.tutorialspoint.com/assembly_programming/assembly_registers.htm)
@@ -85,18 +85,18 @@ The following is the context of the assembly file.
 ```text
 .intel_syntax noprefix
 .bits 32
-	
+
 .global asm0
 
 asm0:
-	push	ebp				
-	mov	ebp,esp
-	mov	eax,DWORD PTR [ebp+0x8]
-	mov	ebx,DWORD PTR [ebp+0xc]
-	mov	eax,ebx
-	mov	esp,ebp
-	pop	ebp	
-	ret
+    push    ebp                
+    mov    ebp,esp
+    mov    eax,DWORD PTR [ebp+0x8]
+    mov    ebx,DWORD PTR [ebp+0xc]
+    mov    eax,ebx
+    mov    esp,ebp
+    pop    ebp    
+    ret
 ```
 
 Breakdown of code:
@@ -113,7 +113,7 @@ mov eax, DWORD PTR [ebp+0x8]
 mov ebx, DWORD PTR [ebp+0xc]
 ```
 
-The above lines are loading our passed arguments to `eax` and `ebx`.  `eax`  will have `0xaa` and `ebx` will be equal to `0xf2`.
+The above lines are loading our passed arguments to `eax` and `ebx`. `eax` will have `0xaa` and `ebx` will be equal to `0xf2`.
 
 ```text
 mov eax, ebx
@@ -134,10 +134,10 @@ ret
 
 picoCTF{0xf2}
 
-### **Assembly-1 - Points: 200**
+## **Assembly-1 - Points: 200**
 
 > What does asm1\(0xcd\) return? Submit the flag as a hexadecimal value \(starting with '0x'\). NOTE: Your submission for this question will NOT be in the normal flag format. [Source](https://2018shell.picoctf.com/static/d0e1ee3fb4731170df828a2a6c81034a/eq_asm_rev.S) located in the directory at /problems/assembly-1\_2\_ac6a59ca77a2d619ddabb3c3ffedb9a8.  
-> Hint:  assembly [conditions](https://www.tutorialspoint.com/assembly_programming/assembly_conditions.htm)
+> Hint: assembly [conditions](https://www.tutorialspoint.com/assembly_programming/assembly_conditions.htm)
 
 Content of file:
 
@@ -186,13 +186,13 @@ Actual code starts at line 9, where argument passed is 0xcd
 10: if argument passed is greater than 0xde, jump to part\_a  
 11: compare arg with 0x8  
 12: if arg not equal to 0x8, jump to part\_b  
-22: part\_b: move argument, 0xcd to register eax.  \[eax=0xcd\]  
+22: part\_b: move argument, 0xcd to register eax. \[eax=0xcd\]  
 23: subtract 0x3 from eax. \[eax=0xca\]  
 24: jump to part\_d  
 35: pop base pointer  
 36: ret always returns value in eax which is 0xca
 
-### **Be-quick-or-be-dead-1 - Points: 200**
+## **Be-quick-or-be-dead-1 - Points: 200**
 
 > You find [this](https://www.youtube.com/watch?v=CTt1vk9nM9c) when searching for some music, which leads you to [be-quick-or-be-dead-1](https://2018shell.picoctf.com/static/14d5f9d228520b83cab25561b3a75abf/be-quick-or-be-dead-1). Can you run it fast enough? You can also find the executable in /problems/be-quick-or-be-dead-1\_2\_83a2a5193f0340b364675a2f0cc4d71e.  
 > Hint: What will the key finally be?
@@ -201,7 +201,7 @@ The file can be directly downloaded from the server using [scp - Securely Copy F
 
 Running the program yields:
 
-```text
+```bash
 tokumeipoh@pico-2018-shell:/problems/be-quick-or-be-dead-1_2_83a2a5193f0340b364675a2f0cc4d71e$ ./be-quick-or-be-dead-1
 Be Quick Or Be Dead 1
 =====================
@@ -210,7 +210,7 @@ Calculating key...
 You need a faster machine. Bye bye.
 ```
 
-#### IDA Method:
+### IDA Method:
 
 You first can use IDA and see in the main function what is going on
 
@@ -240,9 +240,9 @@ leave
 retn
 ```
 
-it seems like there is a set\_timer function that we can look at and edit. Originally it was passed one second to the alarm\(\) and maybe we can extend it to 9 seconds instead. With the set\_timer function opened in IDA, highlight the parameter we need to change. Then go to Edit &gt; Patch Program &gt; Change Byte ... Then you will be shown the whole instruction and change the parameter like from   
+it seems like there is a set\_timer function that we can look at and edit. Originally it was passed one second to the alarm\(\) and maybe we can extend it to 9 seconds instead. With the set\_timer function opened in IDA, highlight the parameter we need to change. Then go to Edit &gt; Patch Program &gt; Change Byte ... Then you will be shown the whole instruction and change the parameter like from  
 C7 45 F4 01 00 00 00 BE 23 07 40 00 BF 0E 00 00  
-to   
+to  
 C7 45 F4 09 00 00 00 BE 23 07 40 00 BF 0E 00 00
 
 ![](../.gitbook/assets/ida.png)
@@ -260,9 +260,9 @@ Printing flag:
 picoCTF{why_bother_doing_unnecessary_computation_d0c6aace}
 ```
 
-#### Cutter Method \(radare2 GUI version\)
+### Cutter Method \(radare2 GUI version\)
 
-Open the file in cutter and check the box that opens in write mode. 
+Open the file in cutter and check the box that opens in write mode.
 
 ![](../.gitbook/assets/clutter1.png)
 
@@ -272,7 +272,7 @@ Open main function and double click set\_timer to go to that functions's locatio
 
 Then at the instruction where it passes a 1 to the alarm function later on. Right-click the instruction &gt; Edit &gt; Instruction and change the value to 9.
 
-#### Radare2 method
+### Radare2 method
 
 Install instructions for linux. For any questions type command with question mark attached at the end of it.
 
@@ -297,7 +297,7 @@ Written 7 byte(s) (mov dword [rbp -0xc], 9) = wx c745f408000000
 
 Execute the file.
 
-#### GDB method
+### GDB method
 
 By far this was the easiest method: using gdb and calling necessary functions. It just required you to know what functions were called from main.
 
@@ -335,7 +335,7 @@ $2 = 59
 (gdb)
 ```
 
-### **Quackme - Points: 200**
+## **Quackme - Points: 200**
 
 > Can you deal with the Duck Web? Get us the flag from this [program](https://2018shell.picoctf.com/static/3a9e7a6330d134243900d8413b326a60/main). You can also find the program in /problems/quackme\_0\_29c1eeadf7509d3b370e5d76c6fa54e5.  
 > Hint: Objdump or something similar is probably a good place to start.
@@ -383,7 +383,5 @@ retn
 main            endp
 ```
 
-In the main function, it prints a greeting message, calls a function do\_magic, prints another message, and then exits.  So the only interesting part is the function do\_magic
-
-
+In the main function, it prints a greeting message, calls a function do\_magic, prints another message, and then exits. So the only interesting part is the function do\_magic
 
