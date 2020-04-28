@@ -340,5 +340,50 @@ $2 = 59
 > Can you deal with the Duck Web? Get us the flag from this [program](https://2018shell.picoctf.com/static/3a9e7a6330d134243900d8413b326a60/main). You can also find the program in /problems/quackme\_0\_29c1eeadf7509d3b370e5d76c6fa54e5.  
 > Hint: Objdump or something similar is probably a good place to start.
 
+There are two ways to inspect this binary, I will thoroughly discuss one way to learn more about reading assembly code and the other way is to use objdump and get to the information directly. So by using any disassembler \(ghidra was good for graphically and radare2 was good for retrieving direct information\)
+
+```bash
+; int __cdecl main(int argc, const char **argv, const char **envp)
+public main
+main proc near ; DATA XREF: _start+17↑o
+
+var_4 = dword ptr -4
+argc  = dword ptr  8
+argv  = dword ptr  0Ch
+envp  = dword ptr  10h
+
+lea     ecx, [esp+4]
+and     esp, 0FFFFFFF0h
+push    dword ptr [ecx-4]
+push    ebp
+mov     ebp, esp
+push    ecx
+sub     esp, 4
+mov     eax, ds:stdout@@GLIBC_2_0
+push    0
+push    2
+push    0
+push    eax
+call    _setvbuf
+add     esp, 10h
+sub     esp, 0Ch
+push    offset aYouHaveNowEnte ; "You have now entered the Duck Web, and "...
+call    _puts
+add     esp, 10h
+call    do_magic ; Interesting!
+sub     esp, 0Ch
+push    offset aThatSAllFolks ; "That's all folks."
+call    _puts
+add     esp, 10h
+mov     eax, 0
+mov     ecx, [ebp+var_4]
+leave
+lea     esp, [ecx-4]
+retn
+main            endp
+```
+
+In the main function, it prints a greeting message, calls a function do\_magic, prints another message, and then exits.  So the only interesting part is the function do\_magic
+
 
 
