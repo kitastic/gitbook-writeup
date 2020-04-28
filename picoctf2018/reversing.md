@@ -27,7 +27,7 @@ asm3:
 
 we can make it a shared library and export its function asm3. let’s just make it compatible with nasm assembler: delete the ‘PTR’ and change the first lines as follows:
 
-```text
+```nasm
 section .text
 global asm3
 
@@ -48,7 +48,7 @@ asm3:
 
 now we can write a little C program that uses the exported library:
 
-```text
+```C
 #include <stdio.h>
 extern int asm3(int a, int b, int c);
 
