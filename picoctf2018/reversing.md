@@ -214,7 +214,7 @@ You need a faster machine. Bye bye.
 
 You first can use IDA and see in the main function what is going on
 
-```text
+```nasm
 ; int __cdecl main(int argc, const char **argv, const char **envp)
 public main
 main proc near ; DATA XREF: _start+1D↑o
@@ -249,7 +249,7 @@ C7 45 F4 09 00 00 00 BE 23 07 40 00 BF 0E 00 00
 
 Then go to Edit &gt; Patch Program &gt; Apply patches to input file ... . Click OK and then rerun the program again.
 
-```text
+```bash
 poh@pohSurface:/mnt/d/pradagy/projects/ctf/pico2018/beQuickOrBeDead$ ./be-quick-or-be-dead-1
 Be Quick Or Be Dead 1
 =====================
@@ -301,7 +301,7 @@ Execute the file.
 
 By far this was the easiest method: using gdb and calling necessary functions. It just required you to know what functions were called from main.
 
-```text
+```bash
 tokumeipoh@pico-2018-shell:/problems/be-quick-or-be-dead-1_2_83a2a5193f0340b364675a2f0cc4d71e$ gdb be-quick-or-be-dead-1
 GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.5) 7.11.1
 Copyright (C) 2016 Free Software Foundation, Inc.
@@ -342,7 +342,7 @@ $2 = 59
 
 There are two ways to inspect this binary, I will thoroughly discuss one way to learn more about reading assembly code and the other way is to use objdump and get to the information directly. So by using any disassembler \(ghidra was good for graphically and radare2 was good for retrieving direct information\)
 
-```bash
+```nasm
 ; int __cdecl main(int argc, const char **argv, const char **envp)
 public main
 main proc near ; DATA XREF: _start+17↑o
