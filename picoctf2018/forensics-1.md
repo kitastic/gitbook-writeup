@@ -410,9 +410,20 @@ poh@pohSurface:/extSuperMagic$ file working.img
 working.img: Linux rev 1.0 ext2 filesystem data, UUID=14573d1a-d758-4679-afdc-c5ac87c10185 (large files)
 ```
 
-Now that file and read it, use debugfs and look for flag.
+Now that file and read it, use debugfs and look for flag.  
+`dump [-p] filespec out_file  
+Dump the contents of the inode filespec to the output file out_file. If the -p option is given set the owner, group and permissions information on out_file to match filespec.`
 
+```bash
+# couldn't use grep in debugfs so echoed command
+poh@pohSurface:/extSuperMagic$ echo ls -l | debugfs fixed.img |grep flag
+debugfs 1.44.1 (24-Mar-2018)
+    429  100644 (1)      0      0   383998 25-Mar-2019 14:14 flag.jpg
+poh@pohSurface:/extSuperMagic$ debugfs fixed.img
+debugfs 1.44.1 (24-Mar-2018)
+debugfs:  dump flag.jpg flag.jpg
+```
 
-
+flag.jpg will be written in the current folder and open it to see the flag inside the image.  
 
 
