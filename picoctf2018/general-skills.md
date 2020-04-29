@@ -196,5 +196,135 @@ picoCTF{who\_n33ds\_p4ssw0rds\_38dj21}
 > To be successful on your mission, you must be able read data represented in different ways, such as hexadecimal or binary. Can you get the flag from this program to prove you are ready? Connect with `nc 2018shell.picoctf.com 1225`.  
 > Hint: I hear python is a good means \(among many\) to convert things. It might help to have multiple windows open
 
+The server will ask you to format 3 things into ascii: binary, hex, and octal data. I used cyberchef and had the three conversions loaded into the recipe and disabled the ones I did not use.
+
+![](../.gitbook/assets/whatbaseisthis.png)
+
+```bash
+poh@pohSurface:/mnt/c/Users/poh$ nc 2018shell.picoctf.com 1225
+We are going to start at the very beginning and make sure you understand how data is stored.
+toxic
+Please give me the 01110100 01101111 01111000 01101001 01100011 as a word.
+To make things interesting, you have 30 seconds.
+Input:
+toxic
+Please give me the 737469746368 as a word.
+Input:
+stitch
+Please give me the  163 164 157 166 145 as a word.
+Input:
+stove
+You got it! You're super quick!
+Flag: picoCTF{delusions_about_finding_values_451a9a74}
+```
+
+Python script:
+
+```python
+from contextlib import contextmanager
+import socket
+
+@contextmanager
+def sock():
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	try:
+		yield s
+	finally:
+		s.close()
+
+def recvUntil(io, str):
+	result = ""
+	while str not in result:
+		result += io.recv(1).decode()
+	return repr(result)
+
+def recvIntro(io):
+	result = ""
+	"""
+		5 lines will be received in intro:
+		We are going to start ...
+		answer to first input (weird)
+		Please give me ...
+		To make things interesting,...
+		Input:
+	"""
+	count = 0
+	while count <= 4:
+		line = recvUntil(io, '\n')
+		print(line)
+		if count == 2:
+			result = line
+		count += 1
+	return result
+
+
+def parseWord(str, base):
+	# word is always in this format:
+	# str = "Please give me the xxxxx as a word.\n"
+	# word = str[20:-11] from index 20 to the 13th char from the end
+	word = str[20:-13]
+	print("word is: ", word)
+	answer = ""
+	if base == 2:
+		# word = a string of 8 digits (1s and 0s) separated by spaces
+		word = word.split()  # remove spaces
+		for byte in word:
+			integer = int(byte, base=2)
+			character = chr(integer)
+			answer += character
+	elif base == 16:
+		# word is a string of hexvalues
+		word = bytearray.fromhex(word)
+		answer = word.decode()
+	else:
+		# word is a string of 3 digits separated by spaces
+		# convert string to int, then to oct
+		word = word.split()
+		for value in word:
+			value = int(value, base=8)
+			answer += chr(value)
+
+	print(answer)
+	answer += '\n'
+	return answer
+
+with sock() as io:
+	io.connect( ("2018shell.picoctf.com", 1225) )
+	line = recvIntro(io)
+	io.send(parseWord(line, 2).encode())
+	
+	line = recvUntil(io, '\n')
+	recvUntil(io,'\n') # Input:
+	io.send(parseWord(line, 16).encode())
+	
+	line = recvUntil(io, '\n')
+	recvUntil(io,'\n') # Input:
+	io.send(parseWord(line, 8).encode())
+
+	print(recvUntil(io, "}\n"))
+```
+
+### **You can't see me - Points: 200**
+
+> '...reading transmission... Y.O.U. .C.A.N.'.T. .S.E.E. .M.E. ...transmission ended...' Maybe something lies in /problems/you-can-t-see-me\_1\_a7045a1e39ce834c26556a81c2b3a74f.  
+> Hint: What command can see/read files? What's in the manual page of ls?
+
+```bash
+tokumeipoh@pico-2018-shell:/problems/you-can-t-see-me_1_a7045a1e39ce834c26556a81c2b3a74f$ ll
+total 60
+drwxr-xr-x   2 root       root        4096 Mar 25  2019 ./
+-rw-rw-r--   1 hacksports hacksports    57 Mar 25  2019 .
+drwxr-x--x 556 root       root       53248 Mar 25  2019 ../
+```
+
+There seems to be a hidden file called "." and because of that you can't use the command `cat .` or `cat ./.`. You can type cat and press tab to autocomplete and access that file instead. Another way is by grep with optional -recursively because it consider the file "." to be a directory.
+
+```bash
+tokumeipoh@pico-2018-shell:/problems/you-can-t-see-me_1_a7045a1e39ce834c26556a81c2b3a74f$ cat .\ \  
+picoCTF{j0hn_c3na_paparapaaaaaaa_paparapaaaaaa_f01e45c4}
+tokumeipoh@pico-2018-shell:/problems/you-can-t-see-me_1_a7045a1e39ce834c26556a81c2b3a74f$ grep -r "picoCTF" .
+./.  :picoCTF{j0hn_c3na_paparapaaaaaaa_paparapaaaaaa_f01e45c4}
+```
+
 
 
