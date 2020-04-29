@@ -384,7 +384,33 @@ picoCTF{n0w\_y0u\_533\_m3}
 > * Be careful with [endianness](https://en.wikipedia.org/wiki/Endianness) when making edits.
 > * Once you've fixed the corruption, you can use /sbin/[debugfs](https://linux.die.net/man/8/debugfs) to pull the flag file out.
 
+```bash
+poh@pohSurface:/extSuperMagic$ file ext-super-magic.img 
+ext-super-magic.img: data
+poh@pohSurface:/extSuperMagic$ cp ext-super-magic.img working.img
+poh@pohSurface:/extSuperMagic$ debugfs working.img 
+debugfs 1.44.1 (24-Mar-2018)
+Checksum errors in superblock!  Retrying...
+working.img: Bad magic number in super-block while opening filesystem
+```
 
+Copied and renamed it working.img and it seems the error is with the super-block. [https://wiki.osdev.org/Ext2\#Superblock](https://wiki.osdev.org/Ext2#Superblock) explains that a super-block starts at offset 1024 \(0x400\) and   
+"start byte: 56, end byte: 57, byte size: 2	== Ext2 signature \(0xef53\), used to help confirm the presence of Ext2 on a volume". You edit the file with a hex editor or python script and write value 0x53ef for little endian.
+
+```python
+# r+ for reading and writing, b for bytes mode
+with open("working.img", "r+b") as hd:
+	hd.seek(1024 + 56)		# start of super-block plus offset of starting byte
+	hd.write(b'\x53\xef')	# little endian
+```
+
+```bash
+poh@pohSurface:/extSuperMagic$ python3 extSuperMagic.py 
+poh@pohSurface:/extSuperMagic$ file working.img 
+working.img: Linux rev 1.0 ext2 filesystem data, UUID=14573d1a-d758-4679-afdc-c5ac87c10185 (large files)
+```
+
+Now that file and read it, use debugfs and look for flag.
 
 
 
